@@ -1,0 +1,34 @@
+教程：https://mp.weixin.qq.com/s?__biz=MzI2OTQ4OTQ1NQ==&mid=2247483667&idx=1&sn=472832a7a902439845afe66684d91345&chksm=eadec553dda94c45775c8af4599f2dbe5ea211dfcbdad556cee433ddfac0bae7c25a3b177c3a#rd
+
+1.在本地创建ssh key
+ssh-keygen -t rsa -C "邮箱"
+
+C:\Users\admin\.ssh 打开id_rsa.pub，复制里面的key。
+
+2.验证是否成功，在git bash下输入
+ssh -T git@github.com
+
+3.设置用户名
+git config --global user.name ""
+4.设置邮箱
+git config --global user.email ""
+
+5.进入要上传的仓库，右键git bash，添加远程地址
+
+git remote add origin url
+
+
+在github上创建项目网站
+新建分支名字叫gh-pages
+域名 bbdeng.github.io/polo--360
+
+
+
+
+
+
+
+
+
+
+

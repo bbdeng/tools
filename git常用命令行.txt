@@ -1,0 +1,64 @@
+1.设置用户名
+git config --global user.name "bangban"
+2.设置邮箱
+git config --global user.email "www.denbangban@qq.com"
+3.查看设置
+git config --list
+4.清屏
+clear
+5.初始化本地git仓库（创建新仓库）
+git init 
+6.查看当前版本状态(是否修改)
+git status
+git diff查看变更内容
+7.添加文件到暂存区
+git add index.html(只提交index.html的文件) 或者 git add .(当前目录下所有修改的文件)
+8.将暂存区的文件提交
+git commit -m 备注
+9.显示提交日志
+git log 显示详细
+git log --oneline 显示1行
+git reflog 查看回退版本后的历史记录
+git show 49648b4  显示49648b4的详细信息
+git -1 显示一条日志
+10.当前所在目录
+pwd
+11.创建文件夹名为test
+mkdir test
+12.进入test的文件夹
+cd test
+13.创建文件 名叫a1.html的文件
+touch a1.html
+14.删除文件名为page-index.css
+git rm page-index.css
+15.撤回
+git checkout -- index.html   恢复到暂存区 如果没有暂存区直接回退到持久区
+git reset --hard 7c7c348   恢复到7c7c348版本
+16.克隆
+git clone url
+17.推送到远程服务器
+git push     或者 git push url master
+18.从远程服务器拉去回来
+git pull
+19.添加远程地址
+git remote add origin url
+20.查看当前目录下的文件
+ls
+
+21.查看分支
+git branch
+ 创建分支
+git branch contact #创建contact分支
+ 切换分支
+git checkout contact #切换到contact分支
+ 合并分支
+git merge contact #先切换到master 然后在合并contact
+ 删除分支
+git branch -d contact #删除contact分支
+
+22.查看远程仓库
+git remote #查看远程仓库
+git remote -v 查看远程仓库地址
+git remote remove <远程仓库名> 删除远程库地址
+git remote add origin url 添加远程库地址
+git remote rename <旧名称> <新名称> 修改远程库名称

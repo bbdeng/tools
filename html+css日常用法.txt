@@ -1,0 +1,136 @@
+1.<body bgcolor="#ffffff" text="yellow">背景颜色 字体颜色
+2.<body background="clouds.gif">背景图片填充
+3.<base target="_blank" />使用 base 标签使页面中的所有标签在新窗口中打开。
+  <base href="http://www.w3school.com.cn/images/" />所有链接规定默认地址
+  <a href="http://www.w3school.com.cn" target="_blank">这1个链接在新窗口打开。
+4.<ol type="A">有序列表改序列号样式
+5.表单知识：<form action="action_page.php">定位url
+            <fieldset></fieldset>表框 <legend>定义标题<legend> 
+            <input type="text" name="firstname" value="bangban"> 
+             type="text文本输入/radio单选/submit提交"
+6.引入外部样式表<link rel="stylesheet" type="text/css" href="style.css" />
+7.联系我们，打开电子邮件。<a href="mailto:www.denbangban@qq.com">
+8.定位跳转 <p id="bottom">网页最下面</p>  <a href="#bottom">到底部</a>
+9./*  */   和html注释类似，必须编写在style标签中，或者是css文件中。
+10.伪类选择器：a:link{}表示普通的链接（没访问过的链接）
+               a:visited{}表示被访问过的链接
+                :hover{}表示鼠标移入的状态
+                :active{}表示鼠标正在被点击状态
+                优先级相同，摆放顺序应该l v h a （love hate）
+                注:  :hover{} 和:active{}除了超链接也可以应用到其他元素,列如<p></p> p:active{}
+               input:focus{} 获取焦点
+               p::selection{}选中内容的样式 注意：火狐采用另一种编写::-moz-selection{} 如果要兼容多浏览器可以2种样式都写
+     否定伪类  语法： :not()   如 p:not(.p1){}
+11.伪元素:     :first-letter{} 第1个字符
+               :first-line{} 第1行
+               p:before{} 段落前面的内容
+               p:after{}  段落后面的内容
+12.属性选择器  title这个属性可以给任何标签指定 当鼠标移入时会显示属性值的文字
+               p[title]{}  [属性名]选取含有指定属性的元素
+               p[title="hello"] [属性名="属性值"]选取含有指定属性值的元素
+               p[title^="ab"] [属性名^="属性值"]选取属性值以指定内容开头的元素
+               p[title&="c"]  [属性名&="属性值"]选取属性值以指定内容结尾的元素
+               p[title*="c"]  [属性名*="属性值"]选取属性值以包含指定内容的元素
+13.兄弟元素选择器 span + p 选中后一个p  语法：前一个+后一个 作用选中兄弟元素的后一个
+                  span ~ p 选中后面所有的p   语法： 前一个 ~ 后一个 作用选中后面所有的兄弟 元素
+14.否定伪类选择器 p：not(.hello) 除了hello的所有P  语法：   ：not（选择器） 作用：踢出已选中的某些元素
+15.继承性      背景样式都不会被继承
+16.优先级的规则  内联样式，优先级1000 
+                 id选择器，优先级100
+                 类和伪类，优先级10
+                 元素选择器，优先级1
+                 通配*，优先级0
+                 继承的样式，没有优先级
+                 当选择器中包含多种选择器时，需要将优先级相加比较
+                 优先级相同是，优先显示后面的元素
+                 最厉害的 !important
+17.去掉无序列表的 项目符号 ul{list-style:none;}
+   去掉超链接的下划线  text-decoration:none;
+18.字体的分类    font-family:serif;
+                 serif(衬线字体)  sans-serif（非衬线字体）
+19.简写          font-size:20px font-family:华文彩云 font-style:italic(设置文字斜体) font-weight:bold(设置文字粗细) font-variant:small-caps;(设置小型大写字母)
+                 font:italic small-caps bold 60px/80px（/后面是行高） "微软雅黑"; 
+                 注意：字体大小和字体必须有 字体大小倒数第2 字体倒数第1
+20.行间距：  行间距=行高-字体大小   行高line-height:40px;
+21.清楚浏览器中默认样式  *{margin:0;padding;0;}
+22.display修改元素的类型  display:inline 设置为内联元素
+                                  block  设置为块元素
+                                  inline-block 设置为行内块元素，既可以设置宽高又不会独占一行
+                                  none     不显示元素，元素不会在页面中占用位置
+23.visibility用来设置元素的显示和隐藏状态 
+                visibility:visible 默认值
+                           hidden  元素会隐藏 依然占据位置
+             display:none  和 visibility:hidden 二者都是隐藏元素区别在于前者不占据位置后者占据位置
+24.overflow 处理超出父元素溢出的内容 
+                 overflow:visible  默认值，超出部分显示在父元素之外
+                          hidden   溢出的部分修剪 不显示
+                          scroll   强制添加滚动条
+                          auto     根据需求自动添加滚动条
+25.解决高度坍塌问题 给父元素设置overflow:hidden;  IE6中给父元素加入zoom:1（1倍的意思）
+       终极解决方案 a.创建一个空的div在父元素之下和浮动元素形成兄弟元素,然后清楚浮动（缺点添加了多余的结构）
+ 		     .clearfix{clear:both;}
+                    b.利用伪类:after选中父元素的最后，插入空内容,加入的内容为内联元素转化成块元素
+                     .clearfix:after{content:""; display:block; clear:both;} 
+                     IE6添加 .clearfix{zoom:1;}
+
+       终终级方案  解决高度塌陷和父子重叠
+                   clearfix:before, clearfix:after{
+				content:"";
+				display:table;
+				clear:both;        }
+
+26.                 清除浮动影响 clear:none默认值 不清除
+                                       left 清除左侧浮动
+				       right 清除右侧浮动
+				       both  清除两侧中影响最大的浮动
+27.文本修饰  text-decoration:none 默认
+                             underline 下划线
+                             overline  上划线
+                             line-through 删除线
+28.边框虚线 border:1px dashed red;
+29.相对定位     position:static 默认值
+                         relative  开启相对定位  原位置定位 不脱离文档流 提升层级 块和内联不变 
+                         absolute  开启绝对定位  最近开启定位的父元素进行定位（弱父元素都不开启则浏览器窗口进行定位） 脱离文档流 提升层级 块被内容撑开内联变成块
+                         fixed      开启固定定位（也是绝对定位的一种） 和绝对定位大部分特点相同 但：1.永远相对于浏览器窗口进行定位 2.不会随着滚动条进行滚动。
+30.层级z-index:2		1.没有开启定位的元素不能使用z-index
+				2.下面结构会盖住上面的
+				3.父元素再高也不会盖住子元素
+31.设置元素的透明背景   opacity=0.5  (值在0-1)
+                        IE8以下用 filter:alpha(opacity=50);  值在0-100
+32.设置背景图片与重复   background-image:url();
+			background-repeat:repeat 默认值，平铺
+                                          no-repeat 不重复
+                                          repeat-x 水平重复
+                                          repeat-y 垂直重复
+33.调整背景图片的位置   background-position:center center;   (top right bottom left center 两两组合)
+			background-position:-10px 100px  前面水平偏移 后面垂直偏移
+                        background-attachment:scroll; 默认值
+					      fixed;  背景固定在浏览器中不随滚动条移动
+34.背景简写属性         background:red url() no-repeat center center fixed;
+35.表格样式             table{border-spacing:0px; border-collapse:collapse;} 前面调整表格之前距离 后者合并线 后者开启前者无效
+36.表单项		1.单选<input type="radio" name="sex" value="male" checked="checked" />男
+			2.多选<input type="checkbox" name="hobby" value="zbs" checked="checked" />赵本山
+			3.下拉列表<select name="star">
+					<optgroup label="女明星">分组
+					<option value="zbs">赵本山</option>
+					</optgroup>
+				</select>
+			4.文本域 <input type="textarea" name="info" />
+			5.按钮 <input type="submit" />提交按钮   <button type="submit">提交</button>
+			       <input type="reset" />重置按钮    <button type="reset">重置</button>
+				<input type="button" />按钮      <button type="button"按钮</button>
+			6.专门用来放提示文字的   <label for="um">用户名</label>  <input type="text" id="um">
+			7.表单项进行分组  <fieldset>
+					  	<legend>用户信息</legend>
+					  </fieldset>
+37.条件CSS Hack      <!--[if IE 6]>
+		     <![endif]-->   该命令中的代码只在IE6中运行 
+   属性级Hack        _: ie 6以下   _backgroud:yellow;
+		     *: IE7 以下   *backgroud:yellow;
+		     \9：IE6+	   backgroud:yellow\9;
+		     \0: ie8以下   backgroud:yellow\0;
+38.设置文本域 不能调整大小  resize:none;
+39.文本框和文本域中的提示文字   placeholder="your name"
+
+
+
