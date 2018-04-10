@@ -143,6 +143,9 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 	-lib	       js代码
 	-doc	       文档
 	-test	       单元测试
+
+	强制自动生成包 npm init --yes
+	自己指定       npm init
 6.npm的命令
 			- npm -v 查看npm的版本
 			- npm version 查看所有模块的版本
