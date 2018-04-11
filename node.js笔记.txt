@@ -157,6 +157,17 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			- npm install 包名 -g 全局安装包（全局安装的包一般都是一些工具）
 			- npm install anywhere -g 下载anywhere全局安装包
 			- anywhere 端口号 开启本地服务器
+			- npm root -g   查看全局安装路径
+			- npmlist       显示当前目录下所有的包
+			- npmlist -g    显示全局下所有的包
+			- npm uninstall 包名    卸载本地的包
+			- npm uninstall 包名 -g 卸载全局下的包
+			- npm update 包名   更新本地包
+			- npm update -g 包名 更新全局下的包
+			- npm update 更新当前目录下所有的包
+			- npm update -g 更新全局下所有的包
+			- npm shrinkwrap 用来彻底锁定所有模块的版本
+			- nom shrinkwrap --dev 加上参数dev，还可以记录devDependencies字段中模块的准确的版本
 7.文件系统（File System）
 	- Buffer（缓冲区）
 		- Buffer和数组的结构的非常类似，Buffer是用来存储二进制数据的
@@ -251,6 +262,91 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 				– fs.rename(oldPath, newPath, callback) – fs.renameSync(oldPath, newPath)
 				监视文件更改写入 
 				– fs.watchFile(filename[, options], listener)
+
+
+8.各种第三方包及其用法
+
+	mime 包
+		-mime.lookup(url)   
+			通过url获取文件的后缀名用来设置响应头类型
+
+
+
+	mongoose 包
+		-mongoose.connect('mongodb://数据库IP地址：端口号/数据库名',{useMongoClient:true})  
+			链接mongoose数据库,如果端口号默认是27017，则可以不用填写
+		-mongoose.connection.once("open",function () {
+    								console.log("数据库链接成功!");
+								});
+		-mongoose.connection.once("close",function () {
+    								console.log("数据库断开成功!");
+								});
+			监听服务器的链接状态
+		-var Schema=mongoose.Schema;
+		 var stuSchema=new Schema({
+    						name:String,
+   						age:Number,
+   						gender:{
+     					   	type:String,
+        					default:"female"
+    						},
+    						address:String
+						});
+			创建Schema(模式)对象
+		-var StuModel=mongoose.model("students",stuSchema);
+			创建Model，Model表示数据库里面的集合，2个参数，第1个表示集合的名字，第2个表示用哪个对象来约束集合
+		-查询Model.find(conditions,[projection],[options],callback)
+		     Model.findById(id,[projection],[options],callback)
+		     Model.findOne(conditions,[projection],[options],callback)
+				conditions 查询的条件
+				projection 投影  传统{name:1,_id:0}  另一种"name -_id_"
+				options 查询选项(skip  limit )
+		-修改 Model.update(conditions ,doc ,[options] ,callback)
+		      Model.updateMany(conditions ,doc ,[options] ,callback)
+		      Model.updateOne(conditions ,doc ,[options] ,callback)
+		-删除 Model.remove(conditions,callback)
+		      Model.deleteOne(conditions,callback)
+	              Model.deleteMany(conditions,callback)
+		-统计 Model.count(conditions,callback)
+9.状态码
+		- 1xx 请求正在处理
+		- 2xx 正常处理完成
+			200 OK 请求成功
+		- 3xx 重定向
+			301 Moved Permanently 永久重定向
+			302 Found 临时重定向
+		- 4xx 客户端错误
+			400 Bad Request 语法错误
+			401 Unauthorized 权限未认证
+			403 Forbidden 禁止访问
+			404 Not Found 资源未找到
+		- 5xx 服务器端错误
+			500 Internal Server 
+10.http模块	
+		-function sverve(res,req){
+					 res.writeHead(404 ,{"Content-Type":"text/html; charset=utf-8"});//响应头
+					 res.write(data404);
+					 res.end();
+				}
+		-var sverver=http.createServer(sverve)  创建服务器
+		-server.listen(8055 );   监听端口
+11.url模块	
+		-分布图解析请访问 http://nodejs.cn/api/url.html#url_constructor_new_url_input_base
+		-var urlObj=url.parse(req.url,true);
+			表示将请求转化为对象，第1个参数为请求url 第2个参数true表示将query查询字符串转换为对象
+		-var pathname=urlObj.pathname
+			获取路径名
+
+12.buffer 
+		3种构建buffer的方法
+	      - var buf1=new Buffer(3);
+		buf1[0]=0x61;buf1[1]=0x62;buf1[2]=0x63;
+	      - var buf2=new Buffer([0x61,0x62,0x63]);
+	      - var buf3=new Buffer("abc");
+		buf1==buf2==buf3	
+		
+
+
 
 
 
