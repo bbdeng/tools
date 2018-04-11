@@ -273,17 +273,17 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 
 
 	mongoose 包
-		-mongoose.connect('mongodb://数据库IP地址：端口号/数据库名',{useMongoClient:true})  
+		- mongoose.connect('mongodb://数据库IP地址：端口号/数据库名',{useMongoClient:true})  
 			链接mongoose数据库,如果端口号默认是27017，则可以不用填写
-		-mongoose.connection.once("open",function () {
+		- mongoose.connection.once("open",function () {
     								console.log("数据库链接成功!");
 								});
-		-mongoose.connection.once("close",function () {
+		- mongoose.connection.once("close",function () {
     								console.log("数据库断开成功!");
 								});
 			监听服务器的链接状态
-		-var Schema=mongoose.Schema;
-		 var stuSchema=new Schema({
+		- var Schema=mongoose.Schema;
+		  var stuSchema=new Schema({
     						name:String,
    						age:Number,
    						gender:{
@@ -295,19 +295,39 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			创建Schema(模式)对象
 		-var StuModel=mongoose.model("students",stuSchema);
 			创建Model，Model表示数据库里面的集合，2个参数，第1个表示集合的名字，第2个表示用哪个对象来约束集合
-		-查询Model.find(conditions,[projection],[options],callback)
+		- 查询Model.find(conditions,[projection],[options],callback)
 		     Model.findById(id,[projection],[options],callback)
 		     Model.findOne(conditions,[projection],[options],callback)
 				conditions 查询的条件
 				projection 投影  传统{name:1,_id:0}  另一种"name -_id_"
 				options 查询选项(skip  limit )
-		-修改 Model.update(conditions ,doc ,[options] ,callback)
+		- 修改 Model.update(conditions ,doc ,[options] ,callback)
 		      Model.updateMany(conditions ,doc ,[options] ,callback)
 		      Model.updateOne(conditions ,doc ,[options] ,callback)
-		-删除 Model.remove(conditions,callback)
+		- 删除 Model.remove(conditions,callback)
 		      Model.deleteOne(conditions,callback)
 	              Model.deleteMany(conditions,callback)
-		-统计 Model.count(conditions,callback)
+		- 统计 Model.count(conditions,callback)
+	express框架
+		- var express=require('express');  /*引入 express*/ 
+		- var app=new express(); /*实例化 express 赋值给 app*/ 
+		- app.get("网址",function(req,res){   });   当用 get 请求访问一个网址的时候，做什么事情：
+		  app.post("网址",function(req,res){   });  当用 post 访问一个网址的时候，做什么事情： 
+		  app.put('/user', function (req, res) {   res.send('Got a PUT request at /user'); }); // user 节点接受 PUT 请求 
+		  app.delete('/user', function (req, res) {   res.send('Got a DELETE request at /user'); }); // user 节点接受 DELETE 请求 
+			简单静态路由配置
+		- app.get("/user/:id",function(req,res){ var id = req.params["id"]; res.send(id); }); 
+			动态路由配置以及获取动态get传值 
+		- /news?id=2&sex=nan 
+		  app.get('/news, function(req, res) {    console.log(req.query); });  路由里面获取 Get 传值 
+		
+ 
+ 
+ 
+
+
+
+	
 9.状态码
 		- 1xx 请求正在处理
 		- 2xx 正常处理完成
@@ -343,7 +363,8 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		buf1[0]=0x61;buf1[1]=0x62;buf1[2]=0x63;
 	      - var buf2=new Buffer([0x61,0x62,0x63]);
 	      - var buf3=new Buffer("abc");
-		buf1==buf2==buf3	
+		buf1==buf2==buf3
+	
 		
 
 
