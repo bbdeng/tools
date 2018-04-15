@@ -308,6 +308,13 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		      Model.deleteOne(conditions,callback)
 	              Model.deleteMany(conditions,callback)
 		- 统计 Model.count(conditions,callback)
+	
+	md5-node模块
+		- 1安装 npm install md5-node --save
+		- 2引入 var md5=require("md5-node")
+		- 3使用 md5(123456);
+	
+
 	express框架
 		- var express=require('express');  /*引入 express*/ 
 		- var app=new express(); /*实例化 express 赋值给 app*/ 
@@ -360,6 +367,8 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		  app.engine("html",ejs._express);
 		  将模板引擎换成html
 		  app.set("view engine","html");  然后就可以创建后缀名为html的模板引擎了
+		- 设置全局变量 可以在任何页面显示
+		  app.locals["username"]=req.session.userinfo.username
 
 	express框架中获取post传值的body-parser包
 		- 引入模块
@@ -369,6 +378,20 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			app.use(bodyParser.json());
 		- 获取post传值
 			req.body
+
+	multiparty模块解决图片上传以及post提交表单数据问题
+		- 安装 npm install multiparty --save
+		- 引入 var multiparty=require("multiparty");
+		- 使用 var addProduct=new multiparty.Form();
+		       addProduct.uploadDir="upload-img";  //上传图片保存地址
+		       addProduct.parse(req,function(err,fields,files){
+					console.log(fields);  //表单提交过来的文字信息
+					console.log(files);  //表单提交过来的图片信息
+			})
+
+
+
+		
 	cookie  - cookie 是存储于访问者的计算机中的变量。可以让我们用同一个浏览器访问同一个域名的时候共享数据。
 		- 1.安装 cnpm instlal cookie-parser --save
 		  2.引入 var cookieParser = require('cookie-parser');
@@ -393,18 +416,18 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		        - 加密cookie
 			1.配置中间件的时候需要传参
 			app.use(cookieParser('123456')); 123456其实可以随便传入
-			2. 设置 cookie  的时候配置 signed为true
+		 	2. 设置 cookie  的时候配置 signed为true
 			res.cookie('userinfo','hahaha',{domain:'.ccc.com',maxAge:900000,httpOnly:true,signed:true});
 			3.signedCookies  调用设置的 cookie
 			console.log(req.signedCookies);
-	session - session  是另一种记录客户状态的机制，不同的是 Cookie  保存在客户端浏览器中，而 session  保存在服务器上。
+	session - session  （包名叫express-session）是另一种记录客户状态的机制，不同的是 Cookie  保存在客户端浏览器中，而 session  保存在服务器上。
 		  session 与cookie的区别 关闭浏览器记录会清空
 		  1.安装 express-session
 		  2.引入 express-session   var session=require("express-session");
 		  3.设置官方文档提供的中间件
 			app.use(session({
     					secret: 'keyboard cat',
-   					resave: true,
+   					resave: false,
     					saveUninitialized: true
 					}));
 		  4.设置session   req.session.urseinfo="帮办";
