@@ -305,9 +305,11 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		      Model.updateMany(conditions ,doc ,[options] ,callback)
 		      Model.updateOne(conditions ,doc ,[options] ,callback)
 		- 删除 Model.remove(conditions,callback)
-		      Model.deleteOne(conditions,callback)
-	              Model.deleteMany(conditions,callback)
+		       Model.deleteOne(conditions,callback)
+	               Model.deleteMany(conditions,callback)
 		- 统计 Model.count(conditions,callback)
+		- 处理id用作为条件    处理id可以直接用id更新
+    		       var sid=mongoose.Types.ObjectId(req.body.id);
 	
 	md5-node模块
 		- 1安装 npm install md5-node --save
@@ -352,6 +354,21 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
     							res.status(404).send("404错误 表示路由没有匹配到");
 						   })
 		-  登陆成功直接跳转页面res.redirect("/product")
+		- 模块化路由
+			1.后台路由引入express模块
+			var express=require("express");
+			2.使用express.Router类创建模块化、可挂载的路由句柄
+			var router=express.Router();
+			3.后台配置路由
+			router.get("/login",functiong(req,res){
+				res.send("登陆!");
+			}) 
+			4.暴露后台模块
+			module.exports =router;
+			5.主程序引入后台模块
+			var index=require("");
+			6.主程序使用后台路由
+			app.use("/",index);
 
 
 		
