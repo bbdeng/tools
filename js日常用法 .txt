@@ -30,6 +30,10 @@
 			不能区别: null与对象, 一般对象与数组
 		instanceof:
 			专门用来判断对象数据的类型: Object, Array与Function
+			- instanceof是如何判断的?
+				* 表达式: A instanceof B
+				* 如果B函数的显式原型对象在A对象的原型链上, 返回true, 否则返回false
+				* Function是通过new自己产生的实例
 		===
 			可以判断: undefined和null
 
@@ -1529,12 +1533,372 @@
 			console.log(Function.__proto__ === Function.prototype) //true
 			c.Object的原型对象是原型链的尽头
 			console.log(Object.prototype.__proto__) //null
+	5. 原型链_属性问题
+		- 读取对象的属性值时: 会自动到原型链中查找
+		- 设置对象的属性值时: 不会查找原型链, 如果当前对象中没有此属性, 直接添加此属性并设置其值
+		- 方法一般定义在原型中, 属性一般通过构造函数定义在对象本身上
 
-	
+七、 变量提升与函数提升
+	1. 变量声明提升
+		* 通过var定义(声明)的变量, 在定义语句之前就可以访问到
+		* 值: undefined
+	2. 函数声明提升
+		* 通过function声明的函数, 在之前就可以直接调用
+		* 值: 函数定义(对象)
+	注：先执行变量提升, 再执行函数提升
 
-		
-	      
-	
+八、 执行上下文
+	1. 代码分类(位置)
+		* 全局代码
+		* 函数代码
+	2. 全局执行上下文
+		- 在执行全局代码前将window确定为全局执行上下文
+		- 对全局数据进行预处理
+			* var定义的全局变量==>undefined, 添加为window的属性
+			* function声明的全局函数==>赋值(fun), 添加为window的方法
+			* this==>赋值(window)
+		- 开始执行全局代码
+	3. 函数执行上下文
+		- 在调用函数, 准备执行函数体之前, 创建对应的函数执行上下文对象
+		- 对局部数据进行预处理
+			* 形参变量==>赋值(实参)==>添加为执行上下文的属性
+			* arguments==>赋值(实参列表), 添加为执行上下文的属性
+			* var定义的局部变量==>undefined, 添加为执行上下文的属性
+			* function声明的函数 ==>赋值(fun), 添加为执行上下文的方法
+			* this==>赋值(调用函数的对象)
+		- 开始执行函数体代码
+	4. 函数执行上下文栈
+		执行过程：
+			* 在全局代码执行前, JS引擎就会创建一个栈来存储管理所有的执行上下文对象
+			* 在全局执行上下文(window)确定后, 将其添加到栈中(压栈)
+			* 在函数执行上下文创建后, 将其添加到栈中(压栈)
+			* 在当前函数执行完后,将栈顶的对象移除(出栈)
+			* 当所有的代码执行完后, 栈中只剩下window
+		例子：
+			<script type="text/javascript">
+				console.log('gb: '+ i)
+				var i = 1
+				foo(1)
+				function foo(i) {
+					if (i == 4) {
+						return
+					}
+					console.log('fb:' + i)
+					foo(i + 1) //递归调用: 在函数内部调用自己
+					console.log('fe:' + i)
+				}
+				console.log('ge: ' + i)
+				</script>
+			问题：1. 依次输出什么?
+				gb: undefined
+				fb: 1
+				fb: 2
+				fb: 3
+				fe: 3
+				fe: 2
+				fe: 1
+				ge: 1
+				2. 整个过程中产生了几个执行上下文?  5
+				n+1原则，n表示调用几次函数，1表示全局执行上下文
+	5.经典面试题
+		测试题1: * 先执行变量提升, 再执行函数提升
+			function a() {}
+			var a
+			console.log(typeof a)  // 'function'
+		测试题2:
+
+			if (!(b in window)) {
+				var b = 1
+			}
+			console.log(b)		// undefined
+		测试题3:
+			var c = 1
+			function c(c) {
+				console.log(c)
+				var c = 3
+			}
+			c(2)			// 报错(因为最后赋值了c=1，所以c不是一个函数无法调用)
+
+九、 作用域
+	1. 理解
+		* 就是一块"地盘", 一个代码段所在的区域
+		* 它是静态的(相对于上下文对象), 在编写代码时就确定了
+	2. 分类
+		* 全局作用域
+		* 函数作用域
+		* 没有块作用域(ES6有了)
+	3. 作用
+		* 隔离变量，不同作用域下同名变量不会有冲突
+	4. 作用于与执行上下文
+		- 区别1
+			* 全局作用域之外，每个函数都会创建自己的作用域，作用域在函数定义时就已经确定了。而不是在函数调用时
+			* 全局执行上下文环境是在全局作用域确定之后, js代码马上执行之前创建
+			* 函数执行上下文是在调用函数时, 函数体代码执行之前创建
+		- 区别2
+			* 作用域是静态的, 只要函数定义好了就一直存在, 且不会再变化
+			* 执行上下文是动态的, 调用函数时创建, 函数调用结束时就会自动释放
+		- 联系
+			* 执行上下文(对象)是从属于所在的作用域
+			* 全局上下文环境==>全局作用域
+			* 函数上下文环境==>对应的函数使用域
+	5. 作用域链
+		- 理解
+			* 多个上下级关系的作用域形成的链, 它的方向是从下向上的(从内到外)
+			* 查找变量时就是沿着作用域链来查找的
+		- 查找一个变量的查找规则
+			* 在当前作用域下的执行上下文中查找对应的属性, 如果有直接返回, 否则进入2
+			* 在上一级作用域的执行上下文中查找对应的属性, 如果有直接返回, 否则进入3
+			* 再次执行2的相同操作, 直到全局作用域, 如果还找不到就抛出找不到的异常
+	6. 作用域_面试题
+		- var x = 10;
+		  function fn() {
+			console.log(x);
+		  }
+		  function show(f) {
+			var x = 20;
+			f();
+		  }
+		  show(fn);
+		输出结果为：10    （因为作用域是静态的，在调用之前就确定好了）
+		- var fn = function () {
+		  console.log(fn)
+		  }
+		  fn()
+		输出结果为：function(){console.log(fn)}
+		- var obj = {
+			fn2: function () {
+			console.log(fn2)
+			//console.log(this.fn2)
+			}
+		  }
+		  obj.fn2()
+		输出结果为：报错(因为fn2首先在function下找，如果没有直接去全局找，都没有则报错，下面那种输出就可以找到)
+
+十、 闭包
+	1. 如何产生闭包?
+		* 当一个嵌套的内部(子)函数引用了嵌套的外部(父)函数的变量(函数)时, 就产生了闭包
+	2. 闭包到底是什么?
+		* 使用chrome调试查看
+		* 理解一: 闭包是嵌套的内部函数(绝大部分人)
+		* 理解二: 包含被引用变量(函数)的对象(极少数人)
+		* 注意: 闭包存在于嵌套的内部函数中
+	3. 产生闭包的条件?
+		* 函数嵌套
+		* 内部函数引用了外部函数的数据(变量/函数)
+	4. 常见的闭包
+		- 将函数作为另一个函数的返回值
+			例子1：
+			function fn1() {
+				var a = 2
+				function fn2() {
+					a++
+					console.log(a)
+				}
+				return fn2
+			}
+			var f = fn1()
+			f() // 3
+			f() // 4
+		- 将函数作为实参传递给另一个函数调用
+			例子2：
+			function showDelay(msg, time) {
+				setTimeout(function () {
+					alert(msg)
+				}, time)
+			}
+			howDelay('atguigu', 2000)
+	5. 闭包的作用(上例1)
+		- 使用函数内部的变量在函数执行完后, 仍然存活在内存中(延长了局部变量的生命周期)
+		- 让函数外部可以操作(读写)到函数内部的数据(变量/函数)
+		- 问题：
+			* 函数执行完后, 函数内部声明的局部变量是否还存在?  一般是不存在, 存在于闭中的变量才可能存在
+			* 在函数外部能直接访问函数内部的局部变量吗? 不能, 但我们可以通过闭包让外部操作它
+	6. 闭包的生命周期
+		- 产生: 在嵌套内部函数定义执行完时就产生了(不是在调用)
+		- 死亡: 在嵌套的内部函数成为垃圾对象时
+		- 例子：
+			function fn1() {
+				//此时闭包就已经产生了(函数提升, 内部函数对象已经创建了)
+				var a = 2
+				function fn2 () {
+					a++
+					console.log(a)
+				}
+				return fn2
+			}
+			var f = fn1()
+			f() // 3
+			f() // 4
+			f = null //闭包死亡(包含闭包的函数对象成为垃圾对象)
+	7. 闭包的应用：定义JS模块
+		* 具有特定功能的js文件
+		* 将所有的数据和功能都封装在一个函数内部(私有的)
+		* 只向外暴露一个包信n个方法的对象或函数
+		* 模块的使用者, 只需要通过模块暴露的对象调用方法来实现对应的功能
+		- 定义js模块2种方法
+			方法一：
+			* js模块通过return {}返回
+			* 使用的时候先引入
+			* 然后的先执行var module=myModule()
+			* 才能使用 module.doSomething()
+			方法二：
+			* js模块利用匿名函数自调用(function (w) {})(window)
+			* 通过w.myModule2={}返回
+			* 使用的时候先引入
+			* 然后就能直接使用 module2.doSomething()
+	8. 闭包的缺点及解决
+		- 缺点：
+			* 函数执行完后, 函数内的局部变量没有释放, 占用内存时间会变长
+			* 容易造成内存泄露
+		- 解决：
+			* 能不用闭包就不用
+			* 及时释放  f = null //让内部函数成为垃圾对象-->回收闭包
+
+			
+十一、 内存溢出与内存泄漏
+	1. 内存溢出
+		* 一种程序运行出现的错误
+		* 当程序运行需要的内存超过了剩余的内存时, 就出抛出内存溢出的错误
+	2. 内存泄露
+		* 占用的内存没有及时释放
+		* 内存泄露积累多了就容易导致内存溢出
+		* 常见的内存泄露:
+			* 意外的全局变量
+			function fn() {
+				a = new Array(10000000)  //定义a的时候没有用var
+				console.log(a)
+			}
+			fn()
+			* 没有及时清理的计时器或回调函数
+			var intervalId = setInterval(function () { //启动循环定时器后不清理
+				console.log('----')
+			}, 1000)
+			// clearInterval(intervalId)  //没有这句关闭计时器，会一直运行
+			* 闭包
+			function fn1() {
+				var a = 4
+				function fn2() {
+					console.log(++a)
+				}
+				return fn2
+			}
+			var f = fn1()
+			f()
+
+			// f = null   //没有这句f=null，由于f一直引用，所以不会成为垃圾对象，不会进行回收
+
+十二、 对象的创造模式
+	1. Object构造函数模式
+		* 套路: 先创建空Object对象, 再动态添加属性/方法
+		* 适用场景: 起始时不确定对象内部数据
+		* 问题: 语句太多
+		例子：
+			var p = new Object() 或者 p = {} //此时内部数据是不确定的
+			p.name = 'Tom'
+			p.age = 12
+			p.setName = function (name) {
+				this.name = name
+			}
+	2. 对象字面量模式
+		* 套路: 使用{}创建对象, 同时指定属性/方法
+		* 适用场景: 起始时对象内部数据是确定的
+		* 问题: 如果创建多个对象, 有重复代码
+		例子：
+			var p = {
+				name: 'Tom',
+				age: 12,
+				setName: function (name) {
+					this.name = name
+				}
+			}
+	3. 工厂模式
+		* 套路: 通过工厂函数动态创建对象并返回
+		* 适用场景: 需要创建多个对象
+		* 问题: 对象没有一个具体的类型, 都是Object类型
+		例子：
+			function createPerson(name, age) { //返回一个对象的函数===>工厂函数
+				var obj = {
+				name: name,
+				age: age,
+				setName: function (name) {
+						this.name = name
+					}
+				}
+
+				return obj
+			}
+			// 创建2个人 （创建的都是Object对象，区分不了具体的类型）
+			var p1 = createPerson('Tom', 12)
+			var p2 = createPerson('Bob', 13)
+	4. 自定义构造函数模式
+		* 套路: 自定义构造函数, 通过new创建对象
+		* 适用场景: 需要创建多个类型确定的对象
+		* 问题: 每个对象都有相同的数据, 浪费内存(需要将方法，存放到原型对象中)
+		例子：
+			function Person(name, age) {
+				this.name = name
+				this.age = age
+				this.setName = function (name) {
+					this.name = name
+				}
+			}
+			function Student (name, price) {
+				this.name = name
+				this.price = price
+			}
+			var s = new Student('Bob', 13000)
+			var p1 = new Person('Tom', 12)
+	5. 构造函数+原型的组合模式
+		* 套路: 自定义构造函数, 属性在函数中初始化, 方法添加到原型上
+		* 适用场景: 需要创建多个类型确定的对象
+		例子：
+			function Person(name, age) { //在构造函数中只初始化一般函数
+				this.name = name
+				this.age = age
+			}
+			Person.prototype.setName = function (name) {
+				this.name = name
+			}
+
+			var p1 = new Person('Tom', 23)
+			var p2 = new Person('Jack', 24)
+
+十三、 原型链继承
+	方式1: 原型链继承
+		1. 套路
+			a. 定义父类型构造函数
+			b. 给父类型的原型添加方法
+			c. 定义子类型的构造函数
+			d. 创建父类型的对象赋值给子类型的原型
+			e. 将子类型原型的构造属性设置为子类型
+			f. 给子类型原型添加方法
+			g. 创建子类型的对象: 可以调用父类型的方法
+		2. 关键
+			* 子类型的原型为父类型的一个实例对象
+		例子：
+			//a.定义父类型构造函数
+			function Supper() {
+				this.supProp = 'Supper property'
+			}
+			//b.给父类型原型添加方法
+			Supper.prototype.showSupperProp = function () {
+				console.log(this.supProp)
+			}
+			//c.定义子类型构造函数
+			function Sub() {
+				this.subProp = 'Sub property'
+			}
+			//d.子类型的原型为父类型的一个实例对象(关键)
+			Sub.prototype = new Supper()
+			//e.让子类型的原型的constructor指向子类型
+			Sub.prototype.constructor = Sub
+			//f.给子类型原型添加方法
+			Sub.prototype.showSubProp = function () {
+				console.log(this.subProp)
+			}
+			//g.创建子类型的对象: 可以调用父类型的方法
+			var sub = new Sub()
+			sub.showSupperProp()
 
 
 
