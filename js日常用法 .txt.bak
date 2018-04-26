@@ -1314,7 +1314,6 @@
 			 * 	这个对象可以帮助我们将一个JSON转换为JS对象，也可以将一个JS对象转换为JSON
 
 		var json = '{"name":"孙悟空","age":18,"gender":"男"}';
-		var json = '[{"name":"孙悟空","age":18,"gender":"男"},{"name":"猪八戒","age":28,"gender":"男"}]'
 			
 			/*
 			 * json --> js对象
@@ -1332,7 +1331,7 @@
 			 * JS对象 ---> JSON
 			 * 	JSON.stringify()
 			 * 		- 可以将一个JS对象转换为JSON字符串
-			 * 		- 需要一个js对象/js数组作为参数，会返回一个JSON字符串
+			 * 		- 需要一个js对象作为参数，会返回一个JSON字符串
 			 */
 			
 			var str = JSON.stringify(obj3);

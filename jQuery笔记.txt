@@ -1,0 +1,144 @@
+一、 了解jQuery
+	1. 是什么: What?
+		* 一个JS函数库: write less, do more
+		* 封装简化DOM操作(CRUD) / Ajax
+	2. 为什么用它: why?
+		* 强大选择器: 方便快速查找DOM元素
+		* 隐式遍历(迭代): 一次操作多个元素
+		* 读写合一: 读数据/写数据用的是一个函数
+		* 链式调用: 可以通过.不断调用jQuery对象的方法
+		* 事件处理
+		* DOM操作(CUD)
+		* 样式操作
+		* 动画
+		* 浏览器兼容
+	3. 如何使用: How?
+		- 引入jQuery库
+			* 本地引入与CDN远程引入
+				远程引入网站：http://www.bootcdn.cn/
+			* 测试版与生产版(压缩版)
+		- 使用jQuery
+			* 使用jQuery函数: $/jQuery
+			* 使用jQuery对象: $xxx(执行$()得到的)
+
+二、 jQuery的2把利器
+	1. jQuery函数: $/jQuery
+		- jQuery向外暴露的就是jQuery函数, 可以直接使用
+			* console.log($, typeof $) //证明$是一个function
+			* console.log(jQuery===$)  // true $与jQuery等同
+			* console.log($ === window.$) //true  $是一个全局函数
+			* console.log(typeof $()) //"object"  这个对象就是jQuery对象
+		- 当成一般函数使用人: $(param)
+			* param是function: 相当于window.onload = function(文档加载完成的监听)
+			* param是选择器字符串: 查找所有匹配的DOM元素, 返回包含所有DOM元素的jQuery对象
+			* param是DOM元素: 将DOM元素对象包装为jQuery对象返回  $(this)
+			* param是标签字符串: 创建标签DOM元素对象并包装为jQuery对象返回
+		- 当成对象使用: $.xxx
+			* each(obj/arr, function(key, value){})
+			* trim(str)
+	2. jQuery对象
+		- 包含所有匹配的n个DOM元素的伪数组对象
+			-伪数组
+				* Object对象
+				* length属性
+				* 数值下标属性
+				* 可以对伪数组进行for循环遍历
+				* 没有数组特别的方法: forEach(), push(), pop(), splice()
+				自定义一个伪数组:
+					var weiArr = {}
+					weiArr.length = 0
+					weiArr[0] = 'atguigu'
+					weiArr.length = 1
+					weiArr[1] = 123
+					weiArr.length = 2
+					console.log(weiArr.forEach, $buttons.forEach) //undefined, undefined
+		- 执行$()返回的就是jQuery对象
+		- 基本行为:
+			* length/size(): 得到dom元素的个数
+			* [index]: 得到指定下标对应的dom元素
+			* each(function(index, domEle){}): 遍历所有dom元素
+			* index(): 得到当前dom元素在所有兄弟中的下标
+
+三、 选择器
+	- 是什么?
+		* 有特定语法规则(css选择器)的字符串
+		* 用来查找某个/些DOM元素: $(selector)
+	- 分类
+		* 基本
+			* #id		//id选择器
+			* tagName/*	//标签名
+			* .class		//类选择器
+			* selector1,selector2,selector3: 并集
+			* selector1selector2selector3:   交集
+		* 层次	
+			* ancestor descendant     //在给定的祖先元素下匹配所有的后代元素
+			* parent>child		//在给定的父元素下匹配所有的子元素
+			* prev+next		//匹配所有紧接在 prev 元素后的一个 next 元素
+			* prev~siblings		//匹配 prev 元素之后的所有 siblings 元素
+		* 过滤
+			* 在原有匹配元素中筛选出其中一些
+			* :first
+			* :last
+			* :eq(index)	
+			* :lt		//大于和小于同时用的时候，是一层一层筛选的，不是同时进行
+			* :gt
+			* :odd
+			* :even
+			* :not(selector)
+			* :hidden
+			* :visible
+			* [attrName]
+			* [attrName=value]
+		* 表单
+			* :input    //匹配所有 input, textarea, select 和 button 元素
+			* :text 
+			* :password 
+			* :radio 
+			* :checkbox 
+			* :submit 
+			* :image 
+			* :reset 
+			* :button 
+			* :file 
+			* :hidden 
+		* 表单对象属性
+			* :enabled 
+			* :disabled 
+			* :checked 
+			* :selected 
+
+四、 工具类的方法
+	1. $.each(obj,function(key,value){}): 遍历数组或对象中的数据
+	2. $.trim(str): 去除字符串两边的空格
+	3. $.type(obj): 得到数据的类型
+	4. $.isArray(obj): 判断是否是数组
+	5. $.isFunction(obj): 判断是否是函数
+	6. $.parseJSON(json) : 解析json字符串转换为js对象/数组
+
+五、 属性/文本
+	- 操作标签的属性, 标签体文本
+		* attr(name) / attr(name, value): 读写非布尔值的标签属性
+		* prop(name) / prop(name, value): 读写布尔值的标签属性
+		* removeAttr(name)/removeProp(name): 删除属性
+		* addClass(classValue): 添加class
+		* removeClass(classValue): 移除指定clas
+		* toggleClass(classValue): 如果存在（不存在）就删除（添加）一个类。
+		* val() / val(value): 读写标签的value
+		* html() / html(htmlString): 读写标签体文本
+
+六、 CSS模块
+	- style样式
+		* css(styleName): 根据样式名得到对应的值
+		* css(styleName, value): 设置一个样式
+		* css({多个样式对}): 设置多个样式
+	- 位置坐标
+		* offset(): 读当前元素坐标(原点是页面左上角)
+		* offset({ top: 10, left: 30 }): 写当前元素坐标(原点是页面左上角)
+		* position(): 读当前元素坐标(原点是父元素左上角)
+		* scrollTop()/scrollLeft(): 读元素/页面的滚动条坐标
+		* scrollTop(300)/scrollLeft(300): 写元素/页面的滚动条坐标
+	- 尺寸
+		* width(20)/height(20): width/height  //该方法也可以写
+		* innerWidth()/innerHeight(): width + padding
+		* outerWidth()/outerHeight(): width + padding + border
+		* outerWidth(true)/outerHeight(true): width + padding + border+margin
