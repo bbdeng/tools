@@ -131,6 +131,9 @@
 		     \0: ie8以下   backgroud:yellow\0;
 38.设置文本域 不能调整大小  resize:none;
 39.文本框和文本域中的提示文字   placeholder="your name"
-
-
+40.一行文字超出后自动进行截取
+	text-overflow:ellipsis; /*ellipsis:截取后用...作为省略;clip:没有省略号 */
+	white-space :nowrap; /*强制不换行*/
+	overflow:hidden; /*溢出隐藏*/
+41.鼠标可点击样式 cursor: pointer;
 
