@@ -2,6 +2,11 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 1.命令行窗口(小黑屏)、CMD窗口、终端、shell
 	- 开始菜单 --> 运行 --> CMD --> 回车
 	- 常用的指令：
+		ipconfig / ipconfig -all  查看自己的电脑IP地址
+		ping www.baidu.com -t 查看自己的网络延迟状态
+		exit 关掉DOS命令窗口
+		cls 清屏
+		D: 直接进入到D盘
 		dir 列出当前目录下的所有文件
 		cd 目录名 进入到指定的目录
 		md 目录名 创建一个文件夹
@@ -32,6 +37,9 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 
 		- 所以我们可以将一些经常需要访问的程序和文件的路径添加到path中，
 			这样我们就可以在任意位置来访问这些文件和程序了
+	- 服务器端口号:(0-65535)
+		* 一般默认端口http找80，https找443，ftp找21端口
+		
 
 
 2.I/O (Input/Output)
@@ -45,6 +53,10 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		String Number Boolean Math Date RegExp Function Object Array
 		而BOM和DOM都不能使用
 			但是可以使用 console 也可以使用定时器（setTimeout() setInterval()）
+	- Node && 浏览器
+		* node采用的是谷歌的V8引擎来渲染JS的(运行速度快，稳定，编写代码不考虑兼容)
+		* 浏览器中的全局JS对象是window，而node环境下的全局JS对象是Global
+		* 浏览器不可能提供用JS对客户电脑磁盘上的文件进行操作的功能；但是node环境提供了对应的I/O操作(服务器上文件的操作)，我们使用JS可以对服务器磁盘下的文件进行增删改查。
 			
 	- Node可以在后台来编写服务器
 		Node编写服务器都是单线程的服务器
@@ -508,11 +520,27 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 				}
 		-var sverver=http.createServer(sverve)  创建服务器
 		-server.listen(8055 );   监听端口
-11.url模块	
-		-分布图解析请访问 http://nodejs.cn/api/url.html#url_constructor_new_url_input_base
-		-var urlObj=url.parse(req.url,true);
+11.url模块(url/uri/urn)	
+		- uri = url + urn 统一资源标识符(统一资源信息)
+		- URL统一定位符
+			* http://user:pass@v.qq.com:80/index.html?name=zhufeng&age=7#bbs
+			* http：传输协议 -->客户端和服务器端的内容和服务区端传递给客户端的内容都是通过HTTP传输协议进行传输的(我们把HTTP理解为快递小哥)
+			* user: 用户名
+			* pass：密码
+			* v.qq.com：域名
+			* 80：端口号
+			* index.html：请求资源文件名
+			* ?name=zhufeng&age=7：url问号传参 -->客户端传递给服务器的内容
+			* #bbs：URL的hash(锚点定位)
+		- 传输协议：
+			* http：超文本传输协议，除了传输文本外还可以传输其他的东西，例如：XML等
+			* https：更加安全的http
+			* ftp：文件传输协议(应用于把项目源文件传递到服务器上)
+			* 一般默认端口http找80，https找443，ftp找21端口
+		- 分布图解析请访问 http://nodejs.cn/api/url.html#url_constructor_new_url_input_base
+		- var urlObj=url.parse(req.url,true);
 			表示将请求转化为对象，第1个参数为请求url 第2个参数true表示将query查询字符串转换为对象
-		-var pathname=urlObj.pathname
+		- var pathname=urlObj.pathname
 			获取路径名
 
 12.buffer 

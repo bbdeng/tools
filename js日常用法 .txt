@@ -959,6 +959,7 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 				- document.getElementById("id属性值");
 			- 根据元素的name属性值查询一组元素节点对象:
 				- document.getElementsByName("name属性值");
+					* 在IE浏览器中只对表单元素的name起作用
 			- 根据标签名来查询一组元素节点对象：
 				- document.getElementsByTagName("标签名");
 				
