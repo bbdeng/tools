@@ -179,7 +179,8 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			- npm update 更新当前目录下所有的包
 			- npm update -g 更新全局下所有的包
 			- npm shrinkwrap 用来彻底锁定所有模块的版本
-			- nom shrinkwrap --dev 加上参数dev，还可以记录devDependencies字段中模块的准确的版本
+			- npm shrinkwrap --dev 加上参数dev，还可以记录devDependencies字段中模块的准确的版本
+			- npm uninstall 包名 -g 全局卸载指定包
 7.文件系统（File System）
 	- Buffer（缓冲区）
 		- Buffer和数组的结构的非常类似，Buffer是用来存储二进制数据的
@@ -520,6 +521,21 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 				}
 		-var sverver=http.createServer(sverve)  创建服务器
 		-server.listen(8055 );   监听端口
+
+		-http 常用方法
+			1. var server = http.createServer(function(request,response){})  
+				* 创建一个服务,变量server就是我们创建出来的那个服务,当客户端向服务器端的当前服务(端口80)发送一个请求，并且当前服务已经成功接收到这个请求后执行回调函数
+				* request(请求)：存放的是所有客户端的请求信息，包含客户端通过问号传参的方式传递给服务器的数据内容
+					* request.url：如果用户输入http://127.0.0.1/index.html?name=zhufeng&age=7 则通过request.url获取到/index.html?name=zhufeng&age=7
+				* response(响应)：提供了向客户端返回内容和数据的方法
+					* response.writeHead(200,{'content-type':'text/html;charset = utf-8;'}); 设置响应头。
+					* response.write(); 向客户端返回内容
+					* response.end(); 告诉服务器响应结束了
+			2. server.listen(80,function(){	     为这个服务监听一个端口80，当端口号监听成功之后执行回调函数.
+				//当端口号监听成功之后执行
+				console.log ("server is create success,listening on 80 port!");
+			   })
+
 11.url模块(url/uri/urn)	
 		- uri = url + urn 统一资源标识符(统一资源信息)
 		- URL统一定位符
@@ -542,6 +558,23 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			表示将请求转化为对象，第1个参数为请求url 第2个参数true表示将query查询字符串转换为对象
 		- var pathname=urlObj.pathname
 			获取路径名
+		- url模块常用方法
+			1. url.parse (url , true); 解析url地址，传入true将query字符串转换为对象
+				例如：var str = "http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs";解析这个地址
+				Url {
+					protocol: 'http:',
+					slashes: true,
+					auth: null,
+					host: 'www.baidu.com:80',
+					port: '80',
+					hostname: 'www.baidu.com',
+					hash: '#bbs',
+					search: '?name=bbdeng&age=24',
+					query: { name: 'bbdeng', age: '24' },
+					pathname: '/index.html',
+					path: '/index.html?name=bbdeng&age=24',
+					href: 'http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs' 
+				}
 
 12.buffer 
 		3种构建buffer的方法
