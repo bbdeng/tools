@@ -136,4 +136,11 @@
 	white-space :nowrap; /*强制不换行*/
 	overflow:hidden; /*溢出隐藏*/
 41.鼠标可点击样式 cursor: pointer;
-
+42.CSS3各行变色 
+#con li:nth-child(even/odd){
+	background:#eee;
+}
+43.取消快速双击选中全部
+html ,body {
+	-webkit-user-select:none;
+}

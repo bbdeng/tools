@@ -505,14 +505,16 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			200 OK 请求成功
 		- 3xx 重定向
 			301 Moved Permanently 永久重定向
-			302 Found 临时重定向
+			302 Found 临时重定向  服务器的负载均衡
+			304 本次获取的内容是读取缓存中的数据
 		- 4xx 客户端错误
-			400 Bad Request 语法错误
+			400 Bad Request 语法错误，客户端传递给服务器端的参数出现错误
 			401 Unauthorized 权限未认证
 			403 Forbidden 禁止访问
 			404 Not Found 资源未找到
 		- 5xx 服务器端错误
-			500 Internal Server 
+			500 Internal Server 未知的服务器错误
+			503 服务器已经超负荷
 10.http模块	
 		-function sverve(res,req){
 					 res.writeHead(404 ,{"Content-Type":"text/html; charset=utf-8"});//响应头
@@ -583,9 +585,97 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 	      - var buf2=new Buffer([0x61,0x62,0x63]);
 	      - var buf3=new Buffer("abc");
 		buf1==buf2==buf3
-	
-		
 
+13. http报文
+	- 客户端传递给服务器的内容 和 服务器传递给客户端的内容 都属于HTTP的报文
+	- 起始行：请求起始行 响应起始行
+	- 首部：请求首部 响应首部 通用首部(请求和响应都有的) 自定义首部
+	- 主体: 请求主体 响应主体
+	- 详解
+		- Request Headers (view sourse)
+		Get /index.html HTTP/1.1 ->请求起始行 HTTP method请求方式、请求的地址、使用的HTTP传输协议的版本号
+		请求首部：客户端会把一些信息放在请求首部中传递给相关服务器端，服务器端就可以在请求首部中获取到相关信息
+		Host: www.baidu.com
+		Connection: keep-alive
+		Pragma: no-cache
+		Cache-Control: no-cache
+		Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+		X-Requested-With: XMLHttpRequest
+		User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36
+		Referer: https://www.baidu.com/
+		Accept-Encoding: gzip, deflate, br
+		Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+
+		- Response Headers (view sourse)
+		HTTP/1.1 200 OK ->响应起始行：HTTP版本号、响应的状态码、状态码的说明
+		响应首部：服务器端传递给客户端的一些信息可以放在响应首部中，客户端可以在响应首部中获取到服务器的相关信息(服务器设置 客户端获取)
+		Cache-Control: private
+		Connection: Keep-Alive
+		Content-Type: baiduApp/json; v6.27.2.14; charset=UTF-8
+		Date: Tue, 15 May 2018 07:06:43 GMT	->服务器当前本次响应的时间(GMT服务器时间格林尼志时间)
+		Expires: Tue, 15 May 2018 08:06:43 GMT  ->响应内容的格式和编码
+		Server: suggestion.baidu.zbb.df
+		Content-Length: 95
+		
+		- Response 响应主体 
+		服务器传递给客户端的数据内容都在响应主体中，客户端可以在响应的主体中获取到这些内容(服务器端设置 客户端获取)
+
+		- Request Payload请求主体
+		客户端传递给服务器端的数据内容可以放在请求主体中传递给服务器，服务器可以在请求主体中获取到传递进来的内容
+
+		客户端传递给服务器端数据：
+		1. 请求URL后面问号传参的方式传递给服务器
+		2. 设置请求的首部
+		3. 设置请求主体，把传递给服务器的内容放在请求主体中传递给服务器
+
+		服务器端传递给客户端数据：
+		1. 设置响应头信息
+		2. 设置响应主体内容
+
+14. Ajax:async javascript and xml 异步的JS和XML
+	* xml：可扩展的标记语言(在xml文件中使用的标签都是自己扩展的)，利用自己扩展的有规则的标记来存储相关的数据
+	* Ajax的作用：客户端JS中的方法，用来想服务器端发送请求(还可以传递给服务器端数据)，然后把服务器端返回的内容获取到(运行在客户端的浏览器中)
+	- Ajax 四步：
+	1.创建一个Ajax对象(IE6以下不支持)
+	var xhr = new XMLHttpRequest();
+	2.发送前的基本信息配置：
+		配置请求方式(get、post、put、delete、head...)
+		打开一个URL地址(配置向一个服务器地址发送请求)
+		同步还是异步(true是异步，false是同步 默认true)
+		[username]向服务器提供请求的用户名
+		[userpass]向服务器提供请求的用户密码，这2个值一般不写，只有服务器做了安全的限制，只允许特定的用户访问的话，我们才传递过去
+	xhr.open("get","/data.txt",false,[username],[userpass]);
+	3.给onreadystatechange这个事件绑定一个方法，监听状态的改变(只要状态改变，就会触发回调)
+		0 UNSEUT 当前的请求还没有发送
+		1 OPENED URL地址已经打开(发送前的参数配置已经完成)
+		2 HEADERS_RECEIVED 响应头信息已经接收
+		3 LOADING 主要返回的内容正在服务器端进行准备处理
+		4 DONE 响应主体的内容已经成功返回到客户端
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)){
+			var data = xhr.responseText;
+		}
+	};
+	4.发送请求：参数是请求主体中传递给服务器的内容
+	xhr.send(null);
+
+15. 同源和非同源
+	- 区分同源和非同源：
+	* 用当前页面的地址 && 数据请求的接口地址比较
+	1. 协议
+	2. 域名或者IP
+	3. 端口号
+	以上三部分完全相同属于同源策略，使用ajax技术获取数据，只要有一个不一样，就属于非同源，我们一般使用JSONP获取数据。
+	
+	JSONP	jsonp请求一定需要对方的服务器做支持才可以
+		JSONP的原理：在script的世界中，没有同源跨域这一说，只要是src属性中是一个合法的地址，script都可以把对应的内容请求回来
+		JSONP就是利用以上原理：
+			1. 我们首先把需要请求数据的，那个跨域的api数据接口的地址，赋值给script的src
+			2. 把当前页面中的某一个函数名当做参数值传递给需要跨域请求数据的服务器(url问号传参?callback=fn)
+			3. 腾讯服务器接受到请求后，需要进行特殊的处理：把你传递进来的数据名和它需要给你的数据拼接成一个字符串
+			例如：我们传递进去的函数名是fn，它准备好的数据是'fn([{"name":"zhufeng"}])' ->'我传递的函数名(需要给我们的数据)'
+			4. 最后腾讯的服务器把准备的数据通过HTTP协议返回给我们客户端，客户端发现其实就是让我们的fn执行，而且还给fn传递了一堆数据，哪些数据就是我们想要的
+			 
 
 
 
