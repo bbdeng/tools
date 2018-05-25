@@ -16,6 +16,7 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 	- 目录
 		. 表示当前目录
 		.. 表示上一级目录
+		C:\Windows\System32\drivers\etc  host域名目录
 		
 	- 环境变量（windows系统中变量）	
 		path
@@ -112,7 +113,7 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
  	实际上模块中的代码都是包装在一个函数中执行的，并且在函数执行时，同时传递进了5个实参
 		 exports
 		 	- 该对象用来将变量或函数暴露到外部
-
+ 
 		 require
 		 	- 函数，用来引入外部的模块
 
@@ -163,15 +164,15 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			- npm version 查看所有模块的版本
 			- npm search 包名 搜索包
 			- npm install / i 包名 安装包
-			- npm remove / r 包名 删除包
+			- npm remove / r 包名 删除包 
 			- npm install 包名 --save 安装包并添加到依赖中 *****
 			- npm install 下载当前项目所依赖的包
 			- npm install 包名 -g 全局安装包（全局安装的包一般都是一些工具）
 			- npm install anywhere -g 下载anywhere全局安装包
 			- anywhere 端口号 开启本地服务器
 			- npm root -g   查看全局安装路径
-			- npmlist       显示当前目录下所有的包
-			- npmlist -g    显示全局下所有的包
+			- npm list       显示当前目录下所有的包
+			- npm list -g    显示全局下所有的包
 			- npm uninstall 包名    卸载本地的包
 			- npm uninstall 包名 -g 卸载全局下的包
 			- npm update 包名   更新本地包
@@ -181,6 +182,10 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			- npm shrinkwrap 用来彻底锁定所有模块的版本
 			- npm shrinkwrap --dev 加上参数dev，还可以记录devDependencies字段中模块的准确的版本
 			- npm uninstall 包名 -g 全局卸载指定包
+			- npm view 包名 查看包
+			- npm config set prefix "d:\global"修改全局安装目录
+			- npm prune 移除当前目录所有不在依赖中的包
+			- npm shrinkwrap 锁定包的版本,如果当前目录下有包没有在依赖中记录会报错
 7.文件系统（File System）
 	- Buffer（缓冲区）
 		- Buffer和数组的结构的非常类似，Buffer是用来存储二进制数据的
@@ -195,90 +200,10 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 				- 创建一个指定大小的buffer对象，可以包含敏感数据
 				
 				
-	- fs模块
-		- 在Node通过fs模块来对系统中的文件进行操作，fs模块是node中已经继承好了，不需要在使用npm下载，直接引入即可
-		- 引入fs
-			var fs = require("fs");
-		- fs模块中的大部分操作都提供了两种方法，同步方法和异步方法
-			同步方法带sync
-			异步方法没有sync，都需要回调函数
-			
-		- 写入文件
-			1.同步写入
-			2.异步写入
-			3.简单写入
-			4.流式写入
-			
-		- 读取文件
-			1.同步读取
-			2.异步读取
-			3.简单读取
-			4.流式读取
-			
-		- 方法
-			- 打开文件
-				fs.open(path, flags[, mode], callback)
-					- 回调函数的参数①err 错误对象，如果没有错误则为null ②fd 文件的描述符
-				fs.openSync(path, flags[, mode])
-					- path 要打开文件的路径
-					- flags 打开文件要求操作的类型
-						r 只读的 w可写的 a追加
-					- mode 设置文件的操作权限，一般不传
-
-			- 读写文件
-				fs.write(fd, string[, position[, encoding]], callback)
-					- 回调函数的参数①err ②written被写入多少字节 ③写入的内容 
-				fs.writeSync(fd, string[, position[, encoding]])
-					- fd 文件的描述符，需要传入要写入文件的描述符
-					- string 要写入的内容
-					- position 写入的起始位置 不管
-					- encoding 编码类型 默认utf-8
-				fs.read(fd, buffer, offset, length, position, callback)
-				fs.readSync(fd, buffer, offset, length, position)
-				
-			- 关闭文件
-				fs.close(fd,callback)
-				fs.closeSync(fd);
-					- fd 文件的描述符，需要传入要关闭的文件的描述符
-			- 简单文件读取和写入
-				fs.writeFile(file, data[, options], callback)
-				fs.writeFileSync(file, data[, options])
-					- file 要操作的文件路径
-					- data 要写入的数据
-					- options 选项，可以对写入进行一些设置
-				fs.readFile(path[, options], callback)
-				fs.readFileSync(path[, options])
-				
-				
-			- 流式文件读取和写入
-				- 流式读取和写入适用于一些比较大的文件
-					var ws=fs.createWriteStream(path[, options])
-					var rsfs.createReadStream(path[, options])
-				- 将可读流中的内容，直接输出到可写流
-					rs.pipe(ws);
-			- 其他操作
-				验证路径是否存在 
-				– fs.exists(path，callback) – fs.existsSync(path)
-				获取文件信息 
-				– fs.stat(path, callback) – fs.statSync(path)
-				删除文件 
-				– fs.unlink(path, callback) – fs.unlinkSync(path)
-				列出文件 
-				– fs.readdir(path[, options], callback) – fs.readdirSync(path[, options])
-				截断文件 
-				– fs.truncate(path, len, callback) – fs.truncateSync(path, len)
-				建立目录 
-				– fs.mkdir(path[, mode], callback) – fs.mkdirSync(path[, mode])
-				删除目录 
-				– fs.rmdir(path, callback) – fs.rmdirSync(path)
-				重命名文件和目录 
-				– fs.rename(oldPath, newPath, callback) – fs.renameSync(oldPath, newPath)
-				监视文件更改写入 
-				– fs.watchFile(filename[, options], listener)
+	
 
 
 8.各种第三方包及其用法
-
 	mime 包
 		-mime.lookup(url)   
 			通过url获取文件的后缀名用来设置响应头类型
@@ -330,84 +255,13 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		- 3使用 md5(123456);
 	
 
-	express框架
-		- var express=require('express');  /*引入 express*/ 
-		- var app=new express(); /*实例化 express 赋值给 app*/ 
-		- app.get("网址",function(req,res){   });   当用 get 请求访问一个网址的时候，做什么事情：
-		  app.post("网址",function(req,res){   });  当用 post 访问一个网址的时候，做什么事情： 
-		  app.put('/user', function (req, res) {   res.send('Got a PUT request at /user'); }); // user 节点接受 PUT 请求 
-		  app.delete('/user', function (req, res) {   res.send('Got a DELETE request at /user'); }); // user 节点接受 DELETE 请求 
-			简单静态路由配置
-		- app.get("/user/:id",function(req,res){ var id = req.params["id"]; res.send(id); }); 
-			动态路由配置以及获取动态get传值 
-		- /news?id=2&sex=nan 
-		  app.get('/news, function(req, res) {    console.log(req.query); });  路由里面获取 Get 传值
-		- 托管静态文件
-		  app.use(express.static("public"));  给public目录下面的托管静态文件
-		  匹配虚拟目录的静态web服务
-		  app.use("/status",express.static("public"))
-		- 中间件：就是匹配路由之前和匹配路由之后做的一系列操作
-		  1.应用级中间件 表示匹配任何路由
-			app.use(function (req, res ,next) {
-								console.log(new Date());
-								next();//路由继续向下匹配
-							})
-		  2.路由中间件    next()路由继续向下匹配
-			app.get("/news",function (req, res,next) {
-    									console.log("这是路由中间件");
-   									next();
-								})
-			app.get("/news",function (req, res) {
-    									res.send("这是路由中间件news2");
-								})
-		  3.内置中间件 托管静态页面
-			app.use(express.static("public"));
-		  4.错误处理中间件
-			app.use(function (req, res) {
-    							res.status(404).send("404错误 表示路由没有匹配到");
-						   })
-		-  登陆成功直接跳转页面res.redirect("/product")
-		- 模块化路由
-			1.后台路由引入express模块
-			var express=require("express");
-			2.使用express.Router类创建模块化、可挂载的路由句柄
-			var router=express.Router();
-			3.后台配置路由
-			router.get("/login",functiong(req,res){
-				res.send("登陆!");
-			}) 
-			4.暴露后台模块
-			module.exports =router;
-			5.主程序引入后台模块
-			var index=require("");
-			6.主程序使用后台路由
-			app.use("/",index);
-
+	
 
 		
 		 
-	express框架中的ejs包使用
-		- 安装 npm install ejs --save
-		- app.set("view engine","ejs");  //配置ejs模板引擎
-		- ejs前台模板文件默认目录放在views下  可以通过app.set("views",_dirname+"/目录名"); 来重新指定新的ejs模板地址
-		- var arr =["111","222","333"]
-  		  res.render("index" ,{list:arr})//ejs渲染模板 第1个参数为在view下需要渲染的模板引擎名字，第2个参数为需要渲染到前台的数据
-		- 引入外部公共的ejs文件<%- include ../public/header.ejs  %>
-		- 注册html模板引擎
-		  app.engine("html",ejs._express);
-		  将模板引擎换成html
-		  app.set("view engine","html");  然后就可以创建后缀名为html的模板引擎了
-		- 设置全局变量 可以在任何页面显示
-		  app.locals["username"]=req.session.userinfo.username
+	
 
-	express框架中获取post传值的body-parser包
-		- 引入模块
-			var bodyParser=require("body-parser");
-		- 配置
-			app.use(bodyParser.urlencoded({ extended: false }));
-			app.use(bodyParser.json());
-		- 获取post传值
-			req.body
+	
 
 	multiparty模块解决图片上传以及post提交表单数据问题
 		- 安装 npm install multiparty --save
@@ -422,83 +276,11 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 
 
 		
-	cookie  - cookie 是存储于访问者的计算机中的变量。可以让我们用同一个浏览器访问同一个域名的时候共享数据。
-		- 1.安装 cnpm instlal cookie-parser --save
-		  2.引入 var cookieParser = require('cookie-parser');
-		  3.设置中间件
-		  app.use(cookieParser());
-		  4.设置 cookie   第1个参数是cookie的名字 第2个是cookie的值 第3个是属性
-		  res.cookie("name",'zhangsan',{maxAge: 900000, httpOnly: true}); 
-		  HttpOnly 默认 false 不允许 客户端脚本访问
-		  5.获取 cookie
-		  req.cookies.name
-		- 第3个参数cookie的属性
-		  属性说明
-			- domain: 域名   例如：.aaa.com  多个2级域名共享cookie信息
-			  C:\Windows\System32\drivers\etc  下的hosts 设置本地的ip域名
-			- Expires： 过期时间（秒），在设置的某个时间点后该 Cookie 就会失效，如 expires=Wednesday,
-			- res.cookie('rememberme', '1', { expires: new Date(Date.now() + 900000), httpOnly:true });
-			- maxAge： 最大失效时间（毫秒），设置在多少后失效
-			- secure： 当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中才有效
-			- Path： 表示 在哪个路由下面可以访问cookie ，如 path=/。如果路径不能匹配时，浏览器则不发送这个 Cookie
-			- httpOnly：是微软对 COOKIE 做的扩展。如果在 COOKIE 中设置了“httpOnly”属性为true，则通过程序（JS脚本、applet 等）将无法读取到COOKIE 信息，防止 XSS 攻击产生
-			- singed：表示是否签名cookie, 设为true 会对这个 cookie 签名，这样就需要用res.signedCookies 而不是 res.cookies 访问它。被篡改的签名 cookie 会被服务器拒绝，并且 cookie值会重置为它的原始值
-		        - 加密cookie
-			1.配置中间件的时候需要传参
-			app.use(cookieParser('123456')); 123456其实可以随便传入
-		 	2. 设置 cookie  的时候配置 signed为true
-			res.cookie('userinfo','hahaha',{domain:'.ccc.com',maxAge:900000,httpOnly:true,signed:true});
-			3.signedCookies  调用设置的 cookie
-			console.log(req.signedCookies);
-	session - session  （包名叫express-session）是另一种记录客户状态的机制，不同的是 Cookie  保存在客户端浏览器中，而 session  保存在服务器上。
-		  session 与cookie的区别 关闭浏览器记录会清空
-		  1.安装 express-session
-		  2.引入 express-session   var session=require("express-session");
-		  3.设置官方文档提供的中间件
-			app.use(session({
-    					secret: 'keyboard cat',
-   					resave: false,
-    					saveUninitialized: true
-					}));
-		  4.设置session   req.session.urseinfo="帮办";
-		  5.获取session   req.session.urseinfo 
-		  6.退出session   req.session.cookie.maxAge=0; 重新设置 cookie 的过期时间  
-		                  req.session.destroy(function(err) { })   销毁登陆
-		- session设置中间件时候的一些属性
-			secret 可以随便设置加密,一个 String 类型的字符串，作为服务器端生成 session 的签名。
-			name  返回客户端的 key 的名称，默认为 connect.sid,也可以自己设置。
-			resave 强制保存 session 即使它并没有变化,。默认为 true。建议设置成 false。
-			saveUninitialized  强制将未初始化的 session 存储。当新建了一个 session 且未设定属性或值时，它就处于未初始化状态。在设定一个 cookie 前，这对于登陆验证，减轻服务端存储压力，权限控制是有帮助的。（默认：true）。建议手动添加。
-			cookie 设置返回到前端 key 的属性，默认值为{ path: ‘/’, httpOnly: true, secure: false, maxAge: null }。
-			rolling  在每次请求时强行设置 cookie，如果将其设置为true,这将重置 cookie 过期时间（默认：false）
-		- 将session 的信息保存到数据库
-		  1.需要安装 express-session 和 connect-mongo 模块
-		  2.引入模块
-			var session = require("express-session");
-			var connectMongo=require("connect-mongo")(session);
-		  3.配置中间件
-			app.use(session({
-    					secret: 'this is string key',
-    					name:"session_id",
-    					resave: false,
-    					saveUninitialized: true,
-    					cookie:{maxAge:1000*60*30},
-    					rolling:true,
-    					store:new connectMongo({
-        							url:"mongodb://127.0.0.1:27017/test",  //服务器地址
-        							touchAfter:24*3600  //通过设置touchAfter：24 * 3600来设置touchAfter：24 * 3600，在24小时内只会更新一次，无论请求的数量是多少（除了那些会改变会话数据的数据）
-    								})
-
-				}));
-		
-		
- 
- 
- 
-
-
-
 	
+	
+		
+		
+ 
 9.状态码
 		- 1xx 请求正在处理
 		- 2xx 正常处理完成
@@ -515,122 +297,11 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		- 5xx 服务器端错误
 			500 Internal Server 未知的服务器错误
 			503 服务器已经超负荷
-10.http模块	
-		-function sverve(res,req){
-					 res.writeHead(404 ,{"Content-Type":"text/html; charset=utf-8"});//响应头
-					 res.write(data404);
-					 res.end();
-				}
-		-var sverver=http.createServer(sverve)  创建服务器
-		-server.listen(8055 );   监听端口
 
-		-http 常用方法
-			1. var server = http.createServer(function(request,response){})  
-				* 创建一个服务,变量server就是我们创建出来的那个服务,当客户端向服务器端的当前服务(端口80)发送一个请求，并且当前服务已经成功接收到这个请求后执行回调函数
-				* request(请求)：存放的是所有客户端的请求信息，包含客户端通过问号传参的方式传递给服务器的数据内容
-					* request.url：如果用户输入http://127.0.0.1/index.html?name=zhufeng&age=7 则通过request.url获取到/index.html?name=zhufeng&age=7
-				* response(响应)：提供了向客户端返回内容和数据的方法
-					* response.writeHead(200,{'content-type':'text/html;charset = utf-8;'}); 设置响应头。
-					* response.write(); 向客户端返回内容
-					* response.end(); 告诉服务器响应结束了
-			2. server.listen(80,function(){	     为这个服务监听一个端口80，当端口号监听成功之后执行回调函数.
-				//当端口号监听成功之后执行
-				console.log ("server is create success,listening on 80 port!");
-			   })
 
-11.url模块(url/uri/urn)	
-		- uri = url + urn 统一资源标识符(统一资源信息)
-		- URL统一定位符
-			* http://user:pass@v.qq.com:80/index.html?name=zhufeng&age=7#bbs
-			* http：传输协议 -->客户端和服务器端的内容和服务区端传递给客户端的内容都是通过HTTP传输协议进行传输的(我们把HTTP理解为快递小哥)
-			* user: 用户名
-			* pass：密码
-			* v.qq.com：域名
-			* 80：端口号
-			* index.html：请求资源文件名
-			* ?name=zhufeng&age=7：url问号传参 -->客户端传递给服务器的内容
-			* #bbs：URL的hash(锚点定位)
-		- 传输协议：
-			* http：超文本传输协议，除了传输文本外还可以传输其他的东西，例如：XML等
-			* https：更加安全的http
-			* ftp：文件传输协议(应用于把项目源文件传递到服务器上)
-			* 一般默认端口http找80，https找443，ftp找21端口
-		- 分布图解析请访问 http://nodejs.cn/api/url.html#url_constructor_new_url_input_base
-		- var urlObj=url.parse(req.url,true);
-			表示将请求转化为对象，第1个参数为请求url 第2个参数true表示将query查询字符串转换为对象
-		- var pathname=urlObj.pathname
-			获取路径名
-		- url模块常用方法
-			1. url.parse (url , true); 解析url地址，传入true将query字符串转换为对象
-				例如：var str = "http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs";解析这个地址
-				Url {
-					protocol: 'http:',
-					slashes: true,
-					auth: null,
-					host: 'www.baidu.com:80',
-					port: '80',
-					hostname: 'www.baidu.com',
-					hash: '#bbs',
-					search: '?name=bbdeng&age=24',
-					query: { name: 'bbdeng', age: '24' },
-					pathname: '/index.html',
-					path: '/index.html?name=bbdeng&age=24',
-					href: 'http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs' 
-				}
 
-12.buffer 
-		3种构建buffer的方法
-	      - var buf1=new Buffer(3);
-		buf1[0]=0x61;buf1[1]=0x62;buf1[2]=0x63;
-	      - var buf2=new Buffer([0x61,0x62,0x63]);
-	      - var buf3=new Buffer("abc");
-		buf1==buf2==buf3
 
-13. http报文
-	- 客户端传递给服务器的内容 和 服务器传递给客户端的内容 都属于HTTP的报文
-	- 起始行：请求起始行 响应起始行
-	- 首部：请求首部 响应首部 通用首部(请求和响应都有的) 自定义首部
-	- 主体: 请求主体 响应主体
-	- 详解
-		- Request Headers (view sourse)
-		Get /index.html HTTP/1.1 ->请求起始行 HTTP method请求方式、请求的地址、使用的HTTP传输协议的版本号
-		请求首部：客户端会把一些信息放在请求首部中传递给相关服务器端，服务器端就可以在请求首部中获取到相关信息
-		Host: www.baidu.com
-		Connection: keep-alive
-		Pragma: no-cache
-		Cache-Control: no-cache
-		Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
-		X-Requested-With: XMLHttpRequest
-		User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36
-		Referer: https://www.baidu.com/
-		Accept-Encoding: gzip, deflate, br
-		Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
 
-		- Response Headers (view sourse)
-		HTTP/1.1 200 OK ->响应起始行：HTTP版本号、响应的状态码、状态码的说明
-		响应首部：服务器端传递给客户端的一些信息可以放在响应首部中，客户端可以在响应首部中获取到服务器的相关信息(服务器设置 客户端获取)
-		Cache-Control: private
-		Connection: Keep-Alive
-		Content-Type: baiduApp/json; v6.27.2.14; charset=UTF-8
-		Date: Tue, 15 May 2018 07:06:43 GMT	->服务器当前本次响应的时间(GMT服务器时间格林尼志时间)
-		Expires: Tue, 15 May 2018 08:06:43 GMT  ->响应内容的格式和编码
-		Server: suggestion.baidu.zbb.df
-		Content-Length: 95
-		
-		- Response 响应主体 
-		服务器传递给客户端的数据内容都在响应主体中，客户端可以在响应的主体中获取到这些内容(服务器端设置 客户端获取)
-
-		- Request Payload请求主体
-		客户端传递给服务器端的数据内容可以放在请求主体中传递给服务器，服务器可以在请求主体中获取到传递进来的内容
-
-		客户端传递给服务器端数据：
-		1. 请求URL后面问号传参的方式传递给服务器
-		2. 设置请求的首部
-		3. 设置请求主体，把传递给服务器的内容放在请求主体中传递给服务器
-
-		服务器端传递给客户端数据：
-		1. 设置响应头信息
-		2. 设置响应主体内容
 
 14. Ajax:async javascript and xml 异步的JS和XML
 	* xml：可扩展的标记语言(在xml文件中使用的标签都是自己扩展的)，利用自己扩展的有规则的标记来存储相关的数据
@@ -675,18 +346,988 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			3. 腾讯服务器接受到请求后，需要进行特殊的处理：把你传递进来的数据名和它需要给你的数据拼接成一个字符串
 			例如：我们传递进去的函数名是fn，它准备好的数据是'fn([{"name":"zhufeng"}])' ->'我传递的函数名(需要给我们的数据)'
 			4. 最后腾讯的服务器把准备的数据通过HTTP协议返回给我们客户端，客户端发现其实就是让我们的fn执行，而且还给fn传递了一堆数据，哪些数据就是我们想要的
-			 
+
+				node.js 第二轮学习(珠峰培训)
+一、REPL
+	* 在控制台中输入node命令，后面没有文件名，进入REPL环境，可以运行各种JS命令。
+	* read-eval-print loop , "读取-求值-输出" 循环
+	* 特殊变量下划线 _ 表示上一个命令的返回结果 5+5; 10;  _+5;  15;
+	* 在REPL中，如果运行一个表达式，会直接在命令行返回结果，如果运行一条语句，就不会有任何输出，因为语句没有返回值
+
+二、console(控制台对象)
+	1. 向标准输出流打印字符并以换行符结束
+		* console.log([data][,...])
+	2. 该命令的作用是返回信息性消息 (console.log()的一个别名)
+		* console.info([data][,...])  
+	3. 输出红色错误消息
+		* console.error([data][,...])
+	4. 输出警告消息 (console.error()的一个别名)
+		* console.warn([data][,...])
+	5. 输出时间，表示计时开始结束,以毫秒为单位
+		* console.time(label)
+		* console.timeEnd(label)
+	6. 显示当前的调用当前堆栈，就是程序函数调用过程
+		* console.trace()
+三. http 核心模块
+	1.http报文
+	- 客户端传递给服务器的内容 和 服务器传递给客户端的内容 都属于HTTP的报文
+	- 起始行：请求起始行 响应起始行
+	- 首部：请求首部 响应首部 通用首部(请求和响应都有的) 自定义首部
+	- 主体: 请求主体 响应主体
+	- 详解
+		- Request Headers (view sourse)
+		Get /index.html HTTP/1.1 ->请求起始行 HTTP method请求方式、请求的地址、使用的HTTP传输协议的版本号
+		请求首部：客户端会把一些信息放在请求首部中传递给相关服务器端，服务器端就可以在请求首部中获取到相关信息
+		Host: www.baidu.com
+			* Host 请求的服务器主机，HTTP/1.1请求必须包含主机头，否则会返回400状态码
+		Connection: keep-alive
+			* 客户端和服务器连接选项
+		Pragma: no-cache
+		Cache-Control: no-cache
+		Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+			* 告诉服务器客户端能够处理的内容类型和优先级 q=表示权重，用分号；分隔，范围是0-1，不指定时权重默认为1
+		X-Requested-With: XMLHttpRequest
+		User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36
+			* 用户代理，是指浏览器，它的信息包括硬件平台、系统软件、应用软件和用户个人偏好
+		Referer: https://www.baidu.com/
+		Accept-Encoding: gzip, deflate, br
+			* 告诉服务器客户端支持的内容编码及内容编码的优先级顺序
+		Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+			* 告诉服务器能够处理的语言以及优先级
+			* 不同语言之前用(,)隔开，一个语言的要求用(;)隔开
+
+		- Response Headers (view sourse)
+		HTTP/1.1 200 OK ->响应起始行：HTTP版本号、响应的状态码、状态码的说明
+		响应首部：服务器端传递给客户端的一些信息可以放在响应首部中，客户端可以在响应首部中获取到服务器的相关信息(服务器设置 客户端获取)
+		Cache-Control: private
+		Connection: Keep-Alive
+		Content-Type: baiduApp/json; v6.27.2.14; charset=UTF-8
+		Date: Tue, 15 May 2018 07:06:43 GMT	->服务器当前本次响应的时间(GMT服务器时间格林尼志时间)
+		Expires: Tue, 15 May 2018 08:06:43 GMT  ->响应内容的格式和编码
+		Server: suggestion.baidu.zbb.df
+		Content-Length: 95
+		Content-Language: en 响应的语言类型
+
+		- Response 响应主体 
+		服务器传递给客户端的数据内容都在响应主体中，客户端可以在响应的主体中获取到这些内容(服务器端设置 客户端获取)
+
+		- Request Payload请求主体
+		客户端传递给服务器端的数据内容可以放在请求主体中传递给服务器，服务器可以在请求主体中获取到传递进来的内容
+
+		客户端传递给服务器端数据：
+		1. 请求URL后面问号传参的方式传递给服务器
+		2. 设置请求的首部
+		3. 设置请求主体，把传递给服务器的内容放在请求主体中传递给服务器
+
+		服务器端传递给客户端数据：
+		1. 设置响应头信息
+		2. 设置响应主体内容
+	2.http模块	
+		-function sverve(req,res){
+					 res.writeHead(404 ,{"Content-Type":"text/html; charset=utf-8"});//响应头
+					 res.write(data404);
+					 res.end();
+				}
+		-var sverver=http.createServer(sverve)  创建服务器
+		-server.listen(8055 );   监听端口
+
+		-http 常用方法
+			1. var server = http.createServer(function(request,response){})  
+				* 创建一个服务,变量server就是我们创建出来的那个服务,当客户端向服务器端的当前服务(端口80)发送一个请求，并且当前服务已经成功接收到这个请求后执行回调函数
+				* request(请求)：存放的是所有客户端的请求信息，包含客户端通过问号传参的方式传递给服务器的数据内容
+					* http接收客户端请求的第一个参数为http.IncomingMessage对象，有如下的属性：
+					* request.url：如果用户输入http://127.0.0.1/index.html?name=zhufeng&age=7 则通过request.url获取到/index.html?name=zhufeng&age=7
+					* request.method 获取请求方式
+					* request.headers 获取请求头,包括客户端所有请求头信息，包括cookie
+					* request.httpVersion   HTTP版本
+				* response(响应)：提供了向客户端返回内容和数据的方法
+					* response.writeHead(200,{'content-type':'text/html;charset = utf-8;'}); 设置响应头。
+					* response.write(); 向客户端返回内容，写入响应体
+					* response.end(); 告诉服务器响应结束了
+					* response.statusCode = 404 ; 设置状态码
+					* response.setHeader({'content-type':'text/html;charset = utf-8;'}); 设置响应头
+			2. server.listen(80,function(){	     为这个服务监听一个端口80，当端口号监听成功之后执行回调函数.
+				//当端口号监听成功之后执行
+				console.log ("server is create success,listening on 80 port!");
+			   })
+			   server.listen(port,[host],[backlog],[callback])
+			   	* port  端口号
+				* host 主机名
+				* backlog 等待中的队列数量，默认值是511
+				* callback请求到来的时候服务器调用的回调函数
+			3. http.ServerResponse 类 就是response
+				1) response.writeHead(statusCode[, statusMessage][, headers])
+					* 发送一个响应头给请求。 状态码是一个三位数的 HTTP 状态码，如 404。 最后一个参数 headers 是响应头。 第二个参数 statusMessage 是可选的状态描述
+					* response.setHeader() 设置的响应头会与 response.writeHead() 设置的响应头合并，且 response.writeHead() 的优先。
+					* statusCode 状态码
+					* statusMessage 状态码描述信息
+					* headers 响应头对象
+						* content-type 内容类型
+						* location 重定向到的URL地址
+						* content-disposition 下载的文件名
+						* content-length 响应内容的字节数
+						* set-cookie 写入客户端cookie
+						* content-encoding 响应内容的编码方式
+						* Cache-Control 缓存
+						* Expires 指定缓存过期时间
+						* Etag 服务器响应内容没有变化时不重新下载数据
+						* connection 默认是keep-alive 保持连接，想断开连接用close
+				2) response.setHeader(name,value); 
+					* 为 headers 对象设置一个单一的 header 值。如果该 header 已经存在了，则将会被替换。这里使用一个字符串数组来设置有相同名称的多个 headers。
+					* request.setHeader('Content-Type', 'application/json');
+					* request.setHeader('Set-Cookie', ['name=zfpx', 'age=6']);
+				3) response.getHeader(name)
+					* 读取一个已入队列但尚未发送到客户端的响应头。 注意，名称不区分大小写。
+				4) response.removeHeader(name)
+					* 从隐式发送的队列中移除一个响应头。
+				5) response.headersSent
+					* 返回一个布尔值（只读）。 如果响应头已被发送则为 true，否则为 false。
+				6) response.sendDate
+					* 当为 true 时，如果响应头里没有日期响应头，则日期响应头会被自动生成并发送。默认为 true。
+				7) response.statusCode
+					* 响应头被发送到客户端后，该属性表示被发出的状态码。
+
+			
+四、 global中的属性和方法
+	1. process(当前进程对象)
+		* process.stdin   stdin进程的标准输入(控制台输入)对象，是一个对象可以进行监听 
+			process.stdin.on ('data',function (data){
+				当
+			})
+		* process.stdout   stdout进程的标准输出(控制台输出)
+			process.stdout.write("hello") 标准输出的write方法就是console.log的原理
+		* process.stderr  process.stderr 属性返回连接到stderr(fd 2)的流。
+		* process.cwd   cwd(current working directory)当前工作目录，和__dirname有点类似，但是__dirname不可能修改，当前工作目录可以切换;
+		* process.chdir('..') chdir(change directory)改变当前工作目录,和cd 类似
+		* process.pid   pid进程ID,当前进程ID
+		* process.nextTick(function(){处理事件队列，排到当前队列的末尾处理
+			console.log ("执行")
+		}) 
+		* process.on('uncaughtException',function(e){ 给当前的进程绑定uncaughtException事件，一个捕获当前程序异常，相当于全部tray catch不推荐使用
+			console.log(e.message);
+		})
+	2. setTimeout: [Function],clearTimeout: [Function],setInterval: [Function],clearInterval: [Function]
+	3. setImmediate: [Function],clearImmediate: [Function],
+	4. __dirname 当前模块的文件夹名称。等同于 __filename 的 path.dirname() 的值。
+	5. __filename 当前模块的文件名称---解析后的绝对路径。
+	6. Buffer 类    用于处理二进制数据。
+	7. console   用于打印 stdout 和 stderr。 
+	8. 
+
+	* 分析注意：
+		* process.nextTick(fun)、setImmediate(fun)、setTimeout(fun,100)作用都是延迟处理。
+		* 延迟处理的优先顺序nextTick>setTimeout>setImmediate>异步IO
+
+五、 util 核心模块(工具类)
+	引入var util = require ('util');
+	1. util.inherits (Child , Parent); 
+		* Child 继承 Parent 的方法
+		* 相当于JS中的Child.prototype = Object.create (Parent.prototype);
+	2. util.inspect(object[, options])
+		* util.inspect() 方法返回 object 的字符串表示，主要用于调试。 附加的 options 可用于改变格式化字符串的某些方面。
+		* 参数说明
+			* object 任何 JavaScript 原始值或对象。
+			* options
+				* showHidden 如果为 true，则 object 的不可枚举的符号与属性也会被包括在格式化后的结果中。 默认为 false。
+				* depth 指定格式化 object 时递归的次数。 这对查看大型复杂对象很有用。 默认为 2。 若要无限地递归则传入 null。
+				* colors  如果为 true，则输出样式使用 ANSI 颜色代码。 默认为 false。
+				* customInspect 如果为 false，则 object 上自定义的 inspect(depth, opts) 函数不会被调用。 默认为 true。
+				* maxArrayLength 指定格式化时数组和 TypedArray 元素能包含的最大数量。 默认为 100。 设为 null 则显式全部数组元素。 设为 0 或负数则不显式数组元素。
+				* breakLength 一个对象的键被拆分成多行的长度。 设为 Infinity 则格式化一个对象为单行。 默认为 60。
+
+			
+
+六、 events 核心模块 (事件)
+	var emitter = require ('events'); //引入events模块
+	1. emitter.on (eventName , listener) //事件监听绑定，多次绑定，fun会依次储存在数组中
+	2. emitter.addListener(eventName , listener) 和emitter.on()相同，就是其别名
+	3. emitter.prependListener(eventName , listener) 方法可用于将事件监听器添加到监听器数组的开头。
+	4. emitter.once (eventName , listener) //单次事件，一旦触发一次后将会移除
+	5. emitter.emit(eventName[, ...args]) 按监听器的注册顺序，同步地调用每个注册到名为 eventName 事件的监听器，并传入提供的参数。如果事件有监听器，则返回 true ，否则返回 false。
+	6. emitter.removeListener(eventName, listener)  解除对应事件名和指定回调事件的绑定，从名为 eventName 的事件的监听器数组中移除指定的 listener。
+	7. emitter.removeAllListeners([eventName]) 移除全部或指定 eventName 的监听器。
+	8. emitter.listeners(eventName) 返回名为 eventName 的事件的监听器数组。
+	- 事件的订阅和发布，自写源代码原理：
+		function Person (name) {
+			this.name = name ; 
+			this._events = {};
+		}
+		//注册监听
+		Person.prototype.on = function (eventName , callback){
+			if(this._events[eventName]){ //如果之前订阅过了这个事件，就添加到数组中
+				this._events[eventName].push = callback ;
+			}else { //如果之前此事件没有订阅过，就新建一个数组，将事件的回调函数放入到数组中
+				this._events[eventName] = [callback] ;
+			}
+		}
+		//事件发布
+		Person.prototype.emit = function (eventName){
+			var args = [].prototype.slice.call (arguments,1);//获取arguments后面的形参
+			var callbacks = this._events[eventName];
+			var self = this; //暂存这里的this，这个this是实例调用改方法的对象
+			callbacks.forEach (function(callback){ //forEach是数组的遍历方法，第1个参数是value，第2个参数index:正在遍历元素的索引，第3个参数obj:被遍历对象
+				callback.apply(self,args); //依次执行on绑定的事件，并且把执行事件的this改为绑定的元素，把参数依次传入
+			});
+		}
+		Person.prototype.once = function (eventName , callback){
+			function onceCallback () {
+				callback.apply (this,arguments);
+				this.removeListener (eventName ,onceCallback);
+			}
+			this.on (eventName ,onceCallback);
+		}
+		//测试
+		var girl = new Person;
+		girl.on ('haha',funcion(){
+			console.log('huhu1')
+		})
+		girl.on ('haha',funcion(){
+			console.log('huhu2')
+		})
+		girl.emit ('haha'); 
+		//结果为
+		huhu1  
+		huhu2
+		
+	- 实例
+		var emitter = require ('events'); //引入events模块
+		var util = require ('util');	//引入util模块
+		function Bell (name) {this.name = name ;} //自建一个构造函数
+		util.inherits (Bell ,emitter); //Bell继承emitter的方法，然后Bell的实例就能使用events的一些方法了
+		var jingleBell = new Bell ('jingle')
+		//订阅
+		jingleBell.on('ring',function(){  //绑定事件
+			console.log ("收到礼物1")
+		})
+		jingleBell.addListener('ring',function(){  //也是绑定事件
+			console.log ("收到礼物2")
+		})
+		jingleBell.once('drop',function(who){  //只触发一次后销毁
+			console.log (who,"铃铛丢了")
+		})
+		//发布
+		jingleBell.emit ('ring')
+		jingleBell.emit ('drop',"我")
+		jingleBell.emit ('drop')
+		//结果
+		收到礼物1
+		收到礼物2
+		铃铛丢了
+	应用：解决异步读取多个数据之后，得到结果
+		- 方式一
+			* 回调嵌套写法，不推荐，太慢了，读取完一个在读取下一个，最好是同时读取
+		- 方式二
+			* 定义一个变量计数
+			var fs = require ('fs');
+			var person = {};
+			var count = 0;
+			fs.readFile ('name.txt','utf8',function (err,data){
+				person.name = data;
+				if (++count === 2 ){
+					out ();
+				}
+			})
+			fs.readFile ('age.txt','utf8',function (err,data){
+				person.age = data;
+				if (++count === 2 ){
+					out ();
+				}
+			})
+			function out(){
+				console.log(person.name ,person.age)
+			}
+		- 方式三 
+			* 用事件的发布和订阅来解决异步问题
+			var fs = require ('fs');
+			var Emitter = require ('events')
+			var eve = new Emitter; //创建一个Emitter实例对象
+			var person = {};
+			eve.on('data',out)
+			fs.readFile ('name.txt','utf8',function (err,data){
+				person.name = data;
+				eve.emit('data');
+			})
+			fs.readFile ('age.txt','utf8',function (err,data){
+				person.age = data;
+				eve.emit('data');
+			})
+			function out(){
+				if (person.name && person.age){
+					console.log(person.name ,person.age)
+				}
+				
+			}
+
+七、 module  - 全局变量，可以直接使用，不需要引入
+	- 模块的查找
+		1. 先从缓存路径中查找，没找到继续
+		2. 直接查找该文件，没找到继续自动添加后缀查找
+		3. 根据包package.json包查找该文件
+		4. 然后添加后缀继续查找
+		5. 查找该目录下的index(.js/node)
+		6. 进入下一个modulepath中查找
+		7. 直到找到磁盘的根目录还没找到则失败
+		结论：
+		require('')引入的时候
+		1. 如果是引入自己写的模块，相对路径必须加./  ../ ， 不然查找的时候不会在当前目录下查找，会直接进入node_modules中查找。可以不加后缀名，程序会自动帮添加
+		2. 核心模块和第3方模块直接写名字就可以
+	- modele属性和方法
+		1. module.id 模块的ID，也就是模块的绝对路径
+		2. module.dilename模块的文件名，模块的绝对路径，和module.id类似
+		3. module.loaded 是否加载完成
+		4. module.parent 父模块，即调用当前模块的模块对象
+		5. module.children 子模块对象，即当前模块require的模块对象
+		6. module.paths 模块的查找路径
+		7. module.exports 导出对象
+			* 使用 exports 
+				- 例子：
+					exports.属性 = 属性值;
+					exports.方法 = 函数;
+							
+			* 使用module.exports
+				- 例子：
+					module.exports.属性 = 属性值;
+					module.exports.方法 = 函数;
+					module.exports = {};
+	- require () 引入模块
+		1. require.cache 被引入的模块将被缓存在这个对象中。从此对象中删除键值对将会导致下一次 require 重新加载被删除的模块。
+		2. require.main 模块入口，当 Node.js 直接运行一个文件时，require.main 会被设为它的 module。 这意味着可以通过 require.main === module 来判断一个文件是否被直接运行：
+		3. require.resolve(request[, options])  得到实际查找结果路径
+			* request <string> 需要解析的模块路径。
+			* paths <Array> 解析模块的起点路径。
+		4. require.resolve.paths(request)  返回一个数组，其中包含解析 request 过程中被查询的路径。 如果 request 字符串指向核心模块（例如 http 或 fs），则返回 null。
+		5. 清除缓存 delete require.cache[require.resolve('./person')];
+ 
+ 八、 buffer
+ 	* buffer是暂时存放输入输出数据的一段内存，是一个表示固定内存分配的全局对象，也就是说要放到缓存区中的字节数需要提前确定
+	- 4种构建buffer的方法
+		1.类方法：Buffer.alloc(size[, fill[, encoding]])  分配一个大小为 size 字节的新建的 Buffer 。 如果 fill 为 undefined ，则该 Buffer 会用 0 填充。
+			* size  新建的 Buffer 期望的长度
+			* fill  用来预填充新建的 Buffer 的值。 默认: 0
+			* encoding 如果 fill 是字符串，则该值是它的字符编码。 默认: 'utf8'
+			var buf = Buffer.alloc(5);
+		类似的还有另一个方法，不同的是新建buffer内容不是00是随机的，可以用buf.fill(0);处理
+		类方法：Buffer.allocUnsafe(size)
+		2.类方法：Buffer.from(array)  通过一个八位字节的 array 创建一个新的 Buffer 。
+	 		* array数组
+			var buf = Buffer.from([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);
+		3.类方法：Buffer.from(string[, encoding])  新建一个包含所给的 JavaScript 字符串 string 的 Buffer 。 encoding 参数指定 string 的字符编码。
+			* string  要编码的字符串
+			* encoding string 的字符编码。 默认: 'utf8'
+			var buf1 = Buffer.from('this is a tést');
+		4.类方法：Buffer.from(buffer)  将传入的 buffer 数据拷贝到一个新建的 Buffer 实例。
+			* buffer  一个要拷贝数据的已存在的 Buffer
+			var buf1 = Buffer.from('buffer');
+			var buf2 = Buffer.from(buf1);
+			
+			
+			
+	      //以下方法都是废弃的,最好别再使用了,用以上的方法代替
+	      1. var buf1=new Buffer(3); 
+	        buf1.fill(0);这种方式创建的buffer开始里面的数字是随机的，可以用这种方式将去全部填充为00 00 00 
+		buf1[0]=0x61;buf1[1]=0x62;buf1[2]=0x63;
+	      2. var buf2=new Buffer([0x61,0x62,0x63]);
+	      3. var buf3=new Buffer("abc",'utf8');  
+		buf1==buf2==buf3
 
 
+	- buffer操作
+		1. buffer和字符串长度
+			* buf.length 表示的是字节的长度
+			* str.length 表示的是字符串长度
+			* 一个汉字的字符串长度是1，但是一个汉字的buffer长度是3个字节
+		2. buffer和字符串的转换
+			* 字符串转换成buffer,var buf = new Buffer('str','utf8')
+			* buffer转换成字符串,var str = buf.toString('utf8')
+		3. buffer输出显示是一个16进制的二位数，且buffer是一个数组，可以使用数组的方法对buffer进行修改。
+		4. buf.write (str,offset,length)
+			* 创建一个buffer然后向里面写数据
+			* 第1个参数是一个字符串
+			* 第2个参数是开始写的起始位置
+			* 第3个参数是要写入的长度
+		5. 复制buffer 
+			* buf.copy(targetBuffer[,targetStart,sourceStart,sourceEnd])
+			* 参数说明
+			* 第1个参数targetBuffer，要把buf拷贝到的目标buffer
+			* 第2个参数targetStart，目标buffer的开始索引
+			* 第3个参数sourceStart，从原始buf的那个起始位置开始读取
+			* 第4个参数sourceEnd，原始buf的结束位置索引
+		6. 类方法：Buffer.isBuffer(obj)
+			* 如果 obj 是一个 Buffer 则返回 true ，否则返回 false 。
+		7. 类方法：Buffer.isEncoding(encoding)
+			* encoding <string> 一个要检查的字符编码名称
+			* 如果 encoding 是一个支持的字符编码则返回 true，否则返回 false 。
+		8. 类方法：Buffer.byteLength(string[, encoding])
+			* 返回一个字符串的实际字节长度。 这与 String.prototype.length 不同，因为那返回字符串的字符数。
+		9. 类方法：Buffer.concat(list[, totalLength])
+			* list <Array> 要合并的 Buffer 或 Uint8Array 实例的数组
+			* totalLength <integer> 合并时 list 中 Buffer 实例的总长度
+			* 如果没有提供 totalLength ，则从 list 中的 Buffer 实例计算得到。 为了计算 totalLength 会导致需要执行额外的循环，所以提供明确的长度会运行更快。
+			* 如果提供了 totalLength，totalLength 必须是一个正整数。如果从 list 中计算得到的 Buffer 长度超过了 totalLength，则合并的结果将会被截断为 totalLength 的长度。
+			例子：
+				var buf1 = new Buffer ([1,2,3])
+				var buf2 = new Buffer ([4,5,6])
+				var buf = Buffer.concat([buf1,buf2],6)
+
+九、 string_decoder 核心模块 - 字符串解码器
+	* string_decoder 模块提供了一个 API，用于把 Buffer 对象解码成字符串，但会保留编码过的多字节 UTF-8 与 UTF-16 字符。
+	1. new StringDecoder('utf8')  创建一个新的 StringDecoder 实例。
+	2. stringDecoder.end([buffer])  包含待解码字节的 Buffer。以字符串的形式返回内部 buffer 中剩余的字节。 残缺的 UTF-8 与 UTF-16 字符的字节会被替换成符合字符编码的字符。
+	3. stringDecoder.write(buffer) 返回一个解码后的字符串，并确保返回的字符串不包含 Buffer 末尾残缺的多字节字符，残缺的多字节字符会被保存在一个内部的 buffer 中用于下次调用 stringDecoder.write() 或 stringDecoder.end()。
+	使用：
+		var buf = new Buffer ("珠峰培训");
+		var buf1 = buf.slice (0,7);
+		var buf2 = buf.slice (7);
+		var StringDecoder = require('string_decoder') 1.引入string_decoder模块
+		var decoder = new StringDecoder(); 2.创建一个实例
+		console.log(decoder.write(buf1))
+		console.log(decoder.write(buf2))
+
+十、 url模块(url/uri/urn) 核心模块 需要引入
+		- uri = url + urn 统一资源标识符(统一资源信息)
+		- URL统一定位符
+			* http://user:pass@v.qq.com:80/index.html?name=zhufeng&age=7#bbs
+			* http：传输协议 -->客户端和服务器端的内容和服务区端传递给客户端的内容都是通过HTTP传输协议进行传输的(我们把HTTP理解为快递小哥)
+			* user: 用户名
+			* pass：密码
+			* v.qq.com：域名
+			* 80：端口号
+			* index.html：请求资源文件名
+			* ?name=zhufeng&age=7：url问号传参 -->客户端传递给服务器的内容
+			* #bbs：URL的hash(锚点定位)
+		- 传输协议：
+			* http：超文本传输协议，除了传输文本外还可以传输其他的东西，例如：XML等
+			* https：更加安全的http
+			* ftp：文件传输协议(应用于把项目源文件传递到服务器上)
+			* 一般默认端口http找80，https找443，ftp找21端口
+		- 分布图解析请访问 http://nodejs.cn/api/url.html#url_constructor_new_url_input_base
+		- var urlObj=url.parse(req.url,true);
+			表示将请求转化为对象，第1个参数为请求url 第2个参数true表示将query查询字符串转换为对象
+		- var pathname=urlObj.pathname
+			获取路径名
+		- url模块常用方法
+			1. url.parse (url , true); 解析url地址，传入true将query字符串转换为对象
+				例如：var str = "http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs";解析这个地址
+				Url {
+					protocol: 'http:',  客户端请求时的协议
+					slashes: true,      在协议与路径中间是否使用//分隔符
+					auth: null, 认证，用户名和密码
+					host: 'www.baidu.com:80', 主机名+端口 
+					port: '80', 端口
+					hostname: 'www.baidu.com', 主机名，IP或者域名
+					hash: '#bbs',  锚点定位
+					search: '?name=bbdeng&age=24',
+					query: { name: 'bbdeng', age: '24' },  不包含起始字符？的查询字符串，或根据该查询字符串转换而成的对象(由parse方法的第二个参数决定，true就转换为对象)
+					pathname: '/index.html',   路径不包含查询字符串
+					path: '/index.html?name=bbdeng&age=24',
+					href: 'http://www.baidu.com:80/index.html?name=bbdeng&age=24#bbs'  被转换的原URL字符串
+				}
+			2. url.format(urlObj)  //将一个被url.parse()拆分的url转换回来
+
+十一、  模块 查询字符串 核心模块 需要引入
+	常用方法：url.query转换成对象时就是利用的这个
+	1. querystring.parse(str[, sep[, eq[, options]]])
+		* 该方法会把一个 URL 查询字符串 str 解析成一个键值对的集合。
+		* str  要解析的 URL 查询字符串。
+		* sep  用于界定查询字符串中的键值对的子字符串。默认为 '&'。
+		* eq   用于界定查询字符串中的键与值的子字符串。默认为 '='。
+		* options
+			* decodeURIComponent 解码查询字符串的字符时使用的函数。默认为 querystring.unescape()。
+			* maxKeys 指定要解析的键的最大数量。默认为 1000。指定为 0 则不限制。
+	2. querystring.stringify(obj[, sep[, eq[, options]]])
+		* 该方法通过遍历给定的 obj 对象的自身属性，生成 URL 查询字符串。
+		* obj  要序列化成 URL 查询字符串的对象。
+		* sep  用于界定查询字符串中的键值对的子字符串。默认为 '&'。
+		* eq   用于界定查询字符串中的键与值的子字符串。默认为 '='。
+		* options
+			* encodeURIComponent 把对象中的字符转换成查询字符串时使用的函数。默认为 querystring.escape()。
+	用法：
+		var querystring = require('querystring');
+		var urlObj = querystring.parse ('name=zfpx&age=6');
+		var urlObj1 = querystring.parse ('name@zfpx;age@6',';','@',{maxKeys:1});
+		var url = querystring.stringify (urlObj);
+
+十二、fs模块 核心模块  需要引入
+	- 在Node通过fs模块来对系统中的文件进行操作，fs模块是node中已经继承好了，不需要在使用npm下载，直接引入即可
+	- 引入fs
+		var fs = require("fs");
+	- fs模块中的大部分操作都提供了两种方法，同步方法和异步方法
+		同步方法带sync
+		异步方法没有sync，都需要回调函数
+			
+	- 写入文件
+		1.同步写入
+		2.异步写入
+		3.简单写入
+		4.流式写入
+			
+	- 读取文件
+		1.同步读取
+		2.异步读取
+		3.简单读取
+		4.流式读取
+			
+	- 方法
+		- 打开文件
+			fs.open(path, flags[, mode], callback)
+				- 回调函数的参数
+				①err 错误对象，如果没有错误则为null 
+				②fd 文件的描述符
+			fs.openSync(path, flags[, mode])
+				- path 要打开文件的路径
+				- flags 打开文件要求操作的类型
+					r 只读的 w可写的 a追加
+				- mode 设置文件的操作权限，一般不传
+			注意文件描述符fd最小都是从3开始,因为0 1 2都被占用了
+				- 0 stdin 标准输入
+				- 1 stdout 标准输出
+				- 2 stderr 错误输出
+
+		- 读写文件(将文件部分读入缓存区)
+			fs.write(fd, string[, position[, encoding]], callback)
+				- fd 文件描述符
+				- string 写入 string 到 fd 指定的文件。
+				- position 指向从文件开始写入数据的位置的偏移量。
+				- encoding 是期望的字符串编码。
+				- 回调有三个参数 (err, written, string)，其中 written 指定传入的字符串被写入多少字节。 注意，写入的字节与字符串的字符是不同的。
+			fs.write(fd, buffer[, offset[, length[, position]]], callback)
+				- fd 文件描述符 
+				- buffer 存放数据的容器
+				- offset 决定 buffer 中被写入的部分
+				- length 是一个整数，指定要写入的字节数
+				- position 指向从文件开始写入数据的位置的偏移量。
+				- callback
+					①err 
+					②bytesWritten被写入多少字节 
+					③buffer
+			fs.writeSync(fd, string[, position[, encoding]])
+				- fd 文件的描述符，需要传入要写入文件的描述符
+				- string 要写入的内容
+				- position 写入的起始位置 不管
+				- encoding 编码类型 默认utf-8
+			fs.read(fd, buffer, offset, length, position, callback)
+				- fd 文件描述符
+				- buffer 存放数据的容器
+				- offset 往buffer里写的偏移量
+				- length 长度
+				- position 文件的当前读取位置
+				- callback
+					* err <Error>
+					* bytesRead <integer> 读取的字节数
+					* buffer <Buffer>
+			fs.readSync(fd, buffer, offset, length, position)
+					
+				
+		- 关闭文件
+			fs.close(fd,callback)
+			fs.closeSync(fd);
+				- fd 文件的描述符，需要传入要关闭的文件的描述符
+		- 简单文件读取和写入(将文件整体读入缓存区)
+			fs.writeFile(file, data[, options], callback)
+			fs.writeFileSync(file, data[, options])
+				- file 要操作的文件路径
+				- data 要写入的数据
+				- options 选项，可以对写入进行一些设置
+					* encoding <string> | <null> 默认 = 'utf8'
+					* mode <integer> 默认 = 0o666
+						* 权限设置，read(r，4) write(w,2) execute (1)  二爷(写)一直(执行)死(读)读书
+						* -rw- 自己创建者拥有的权限
+						* r-- 所属组
+						* r-- 其他人
+						* 666表示自己、所属组、他人都具有可读写的权限
+					* flag <string> 默认 = 'w' 
+				- callback <Function> err <Error>
+
+			fs.appendFile(path, data[, options], callback)
+				* 异步地追加数据到一个文件，如果文件不存在则创建文件。 data 可以是一个字符串或 Buffer。
+			fs.appendFileSync(path, data[, options])
+
+			fs.readFile(path[, options], callback)
+			fs.readFileSync(path[, options])
+				* options中的参数
+				* encoding <string> | <null> 默认 = null 如果指定了 encoding 选项utf8，则该函数返回一个字符串，否则返回一个 buffer。
+				* flag <string> 默认 = 'r'  r 只读的 w可写的 a追加
+				 
+				
+		- 流式文件读取和写入 fs.ReadStream 类
+			- 流式读取和流式适用于一些比较大的文件
+				1.可写流
+				- 代码及其参数说明
+					var ws=fs.createWriteStream(path[, options])
+					* path 读取文件的路径
+					* options的参数
+						* flags 对文件采取何种操作，默认w
+						* encoding 指定编码，默认null
+						* autoClose 写完数据后是否关闭文件描述符
+						* start 用整数表示文件开始字节数的写入位置
+						* highWaterMark 最高水位线，write()开始返回false的缓冲大小。缺省为16kb
+							
+				- 可写流触发的事件
+					* drain write返回false后触发，表示操作系统缓存区中的数据已经全部输出到目标对象中。
+					* error 写入错误时触发
+					* open  当 WriteStream 的文件被打开时触发。
+					* close 当 WriteStream 底层的文件描述符被关闭时触发。
+				- 可写流的方法
+					* ws.write(chunk[,encoding,callback])  写入数据
+						* chunk 要写入的数据，buffer或字符串对象，必须指定
+						* encoding 写入编码，chunk为字符串时有用，可选
+						* callback 写入成功后的回调 
+						* 有返回值为布尔值，系统缓存区定满时为false，未满时为true
+								
+					* ws.end(chunk[,encoding,callback])    写入并关闭，结束写入数据时触发。迫使缓存区中的数据立即写入目标对象，调用后不能再写入
+					
+				2.可读流
+				- 代码及其参数说明
+					var rs=fs.createReadStream(path[, options])
+					* path 读取文件的路径
+					* options的参数
+						* flags 对文件采取何种操作，默认r
+						* encoding 指定编码，默认null
+						* autoClose 读完数据后是否关闭文件描述符
+						* start 用整数表示文件开始读取的字节数的索引位置
+						* end 用整数表示文件结束读取的字节数的索引位置(包括end位置)
+						* highWaterMark 最高水位线，停止从底层资源读取前内部缓冲区最多能存放的字节数。缺省为64kb
+				- 可读流触发的事件
+					* readable 监听readable会使数据从底层读到系统缓存区，读到数据后或者排空后如果再读到数据，会触发该事件
+					* data 绑定一个data事件监听器到会将流切换到流动模式，数据会被尽可能快的读出
+					* end  该事件会在读完数据后被触发
+					* error 当数据接收时发生错误时触发
+					* close 当底层数据源(比如，源头的文件描述符)被关闭时触发，并不是所有流都会触发这个事件
+					* open  打开文件，并不是所有流都会触发这个事件
+					* ready 当 fs.ReadStream 已准备好被使用时触发。'open' 之后立即触发。
+				- 可读流的方法
+					* rs.read()    在readable事件触发时的回调函数里读取数据
+					* rs.setEncoding('utf8')  指定编码
+					* rs.pause()   通知对象停止触发data事件
+					* rs.resume()  通知对象恢复触发data事件
+					* rs.pipe()    设置管道，将可读流里的内容导入到参数指定的可写流里
+					* rs.unpipe()  取消数据通道
+					* rs.unshift(data) 把数据块插回队列开头,处理过后的数据，插回开头重新读取
+				- 将可读流中的内容，直接输出到可写流
+					rs.pipe(ws[,options]);
+						* rs 可读流对象
+						* ws 可写流对象
+						* options
+							* end 为true时表示数据读取完毕后立刻将缓存区中的数据写入目标文件并关闭文件
 
 
+		- 其他操作
+			验证路径是否存在 
+			– fs.exists(path，callback) – fs.existsSync(path)
+			获取文件信息 
+			– fs.stat(path, callback) – fs.statSync(path)
+			删除文件 
+			– fs.unlink(path, callback) – fs.unlinkSync(path)
+			列出文件 
+			– fs.readdir(path[, options], callback) – fs.readdirSync(path[, options])
+			截断文件 
+			– fs.truncate(path, len, callback) – fs.truncateSync(path, len)
+			建立目录 
+			– fs.mkdir(path[, mode], callback) – fs.mkdirSync(path[, mode])
+			删除目录 
+			– fs.rmdir(path, callback) – fs.rmdirSync(path)
+			重命名文件和目录 
+			– fs.rename(oldPath, newPath, callback) – fs.renameSync(oldPath, newPath)
+			监视文件更改写入 
+			– fs.watchFile(filename[, options], listener)
 
+十三、 Path模块 核心模块 需要引入
+	常用的方法
+	1. path.join()
+		* path.join方法用于连接路径。该方法的主要用途在于，会正确使用当前系统的路径分隔符，Unix系统是'/'，Windows系统是'\'。
+		例子：
+		var path = require('path');
+		path.join(mydir, "foo"); //上面代码在Unix系统下，会返回路径mydir/foo。
+	2. path.resolve()
+		* path.resolve方法用于将相对路径转为绝对路径。
+		* 它可以接受多个参数，依次表示所要进入的路径，直到将最后一个参数转为绝对路径。如果根据参数无法得到绝对路径，就以当前所在路径作为基准。除了根目录，该方法的返回值都不带尾部的斜杠。
+		例子：
+		path.resolve('/foo/bar', '/tmp/file/')  //   /tmp/file
+		path.resolve('wwwroot', 'static_files/png/', '../gif/image.gif')
+		//如果当前目录是/home/myself/node，返回 /home/myself/node/wwwroot/static_files/gif/image.gif
+	3. accessSync()
+		* accessSync方法用于同步读取一个路径。
+		fs.exists(pth, mode)原理
+		function exists(pth, mode) {
+			try {
+				fs.accessSync(pth, mode);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		}
+	4. path.relative()
+		* path.relative方法接受两个参数，这两个参数都应该是绝对路径。该方法返回第二个路径相对于第一个路径的那个相对路径。
+		例子：
+		path.relative('/data/orandea/test/aaa', '/data/orandea/impl/bbb') //   ../../impl/bbb
+		* 如果path.relative方法的两个参数相同，则返回一个空字符串。
+	5. path.parse()
+		* path.parse()方法可以返回路径各部分的信息。
+		例子：
+		var myFilePath = '/someDir/someFile.json';
+		path.parse(myFilePath).base  //someFile.json
+		path.parse(myFilePath).name  //someFile
+		path.parse(myFilePath).ext   //.json
+	6. path.extname(path)
+		* path.extname() 方法返回 path 的扩展名，即从 path 的最后一部分中的最后一个 .（句号）字符到字符串结束。 如果 path 的最后一部分没有 . 或 path 的文件名（见 path.basename()）的第一个字符是 .，则返回一个空字符串。
+		例子：
+		path.extname('index.html');  //返回: '.html'
+		path.extname('index.coffee.md');  //返回: '.md'
+		path.extname('index.');	// 返回: '.'
+		path.extname('index'); // 返回: ''
+		path.extname('.index'); // 返回: ''
 
+十四、 各种框架及其第三方包
+	1.express框架
+		1) 路由控制
+			app.get方法--根据请求路径来处理客户端发出的get请求,由于get方法的回调函数没有调用next方法，所以只要有一个中间件被调用了，后面的中间件就不会再被调用了。
+			app.post方法 
+			app.put方法
+			app.del方法
+				app.get(path,function(req,res));
+					* path 为请求路径
+					* 第2个参数处理请求的回调函数，有2个参数req,res代表请求信息和响应信息
+			app.all方法--可以匹配所有的HTTP方法，不关心提交的方法，只找请求的路径
+				app.all(path,function(req,res));
+			app.set方法
+				set方法用于指定变量的值。
+				app.set("views", __dirname + "/views");
+				app.set("view engine", "jade");
+				上面代码使用set方法，为系统变量“views”和“view engine”指定值。
 
+		2) 中间件 (就是匹配路由之前和匹配路由之后做的一系列操作)
+			- app.use ([path],function(req,res,next){}); //可选参数path参数默认为"/"
+			* 中间件(middleware)就是处理HTTP请求的函数，用来完成各种特定的任务，比如检测用户是否登录、分析数据、以及其他在需要最终将数据发送给用户之前完成的任务。
+			* 特点：
+		  		a. 每个中间件都可以控制流程是否继续执行
+				b. req  res相同对象，可以延续属性,其实就是一个中间件处理完，可以把相应数据再传递给下一个中间件
+				c. 如果调用回调函数的next参数表示将请求数据传递给下一个中间件。
+				d. 如果出错了，转交错误处理中间件进行处理
+			- 中间件的分类及作用
+				1.应用级中间件 表示匹配任何路由
+				app.use(function (req, res ,next) {
+					console.log(new Date());
+					next();//路由继续向下匹配
+				})
+				2.自定义中间件 例如权限判断,写在需要权限进入路由之前
+				app.use(function (req, res, next) {
+					//首先login和doLogin不需要判断
+					if (req.url === "/admin/login"||req.url ==="/admin/login/doLogin"){
+						next();
+					}else {
+						if (req.session.userinfo && req.session.userinfo!=='') {//判断session存在并且不为空字符串说明已登录
+							next();
+						}else {
+							res.redirect("/admin/login");//否则返回登录界面
+						}
+					}
+				});
+				3.路由中间件    next()路由继续向下匹配
+				app.use("/news",function (req, res,next) {
+    					console.log("这是路由中间件");
+   					next();
+				})
+				app.use("/news",function (req, res) {
+    					res.send("这是路由中间件news2");
+				})
+				4. 静态文件服务中间件 唯一一个内置中间件
+				app.use(express.static("public"),{options});
+					* options下的参数设置
+						* dotfiles 是否对外输出文件名以(.)开头的文件,可选值(string) "allow" "deny" 默认"ignore"
+						* etag 是否启动etag生成 (Boolean) 默认true
+						* extensions 设置文件扩展名备份选项(Array)  默认[]
+						* index  发送目录索引文件，设置为false禁用目录索引。(Mixed)  "index.html" 意思就是，放在public下的index.html和路由"/index.html"先返回public下的
+						* lastModified 设置Last-Modified头为文件在操作系统上的最后修改日期。可能值为true或者false   默认true
+						* maxAge 以毫秒或者其字符串格式设置Cache-Control 头的max-age 属性 (number) 默认0
+						* redirect 当路径为目录时，重定向至"/"。(Boolean)  true
+						* setHeaders 设置HTTP头的函数 (function(res,...){})
+				* express.static("public")是express内置的唯一一个中间件，是基于serve-static开发的，负责托管express应用内的静态资源
+				匹配虚拟目录的静态web服务
+				app.use("/status",express.static("public"))
+				5.错误处理中间件,放最后一层
+				app.use(function (req, res) {
+    					res.status(404).send("404错误 表示路由没有匹配到");
+				})
+			
 
+		3) express常用的属性和方法
+			- request对象
+				* req.host 返回请求头里取的主机名 (不包含端口号)
+				* req.path 返回请求的URL的路径名
+				* req.query 是一个可获取客户端get请求路径参数的对象属性，包含着被解析过的请求参数对象，默认为{}
+				* req.params 是一个路径参数对应的对象。
+					* 
+					如：app.get("/article/:id/:name",function(req,res){
+						res.send (req,params);
+						//如果访问url输入localhost:8080//article/1/zfpx,则会返回{"id":"1","name":"zfpx"}
+					})
+				* req.ip 属性用于获得HTTP请求的IP地址。
+				* req.files用于获取上传的文件。
 
+			- response对象
+				* res.send()
+					* 该方法向浏览器发送一个响应信息，并可以智能处理不同类型的数据。并地输出响应时会自动进行一些设置，比如head信息、http缓存支持等等。
+					* 原本http只有write和end方法，只能发送buffer和字符串。但是express智能处理了。
+					* 当参数为一个string时,Content-Type默认设置为"text/html"。
+						res.send([body|status],[body])
+					* 当参数为Array或Object时，express会返回一个JSON
+						res.send({user:"tobi"}) //{"user":"tobi"}
+					* 不能使用数字作为参数，如果要返回状态码要用res.sendStatus()方法
+				* res.sendStatus(200) 发送状态码
+				* res.redirect("/product") 方法允许网址的重定向。
+				* res.redirect(301, "http://www.example.com");
+				* res.sendFile("/path/to/anime.mp4") 方法用于发送文件。
+				* res.render("index", { message: "Hello World" });方法用于渲染网页模板。
 
+			
+		4) 模板引擎
+			1. 安装模板引擎
+			npm install ejs --save
+			2. 指定模板引擎
+			app.set ('view engine','ejs'); //配置ejs模板引擎
+			3. 设置放模板文件的目录
+			app.set ('views',path.join(__dirname,'views')) 
+				- ejs前台模板文件默认目录放在views下  可以通过app.set("views",_dirname+"/目录名"); 来重新指定新的ejs模板地址
+			4. render 函数，对网页模板进行渲染 在渲染模板时locals 可为其模板传入变量值，在模板中就可以调用所传变量了,
+			var arr =["111","222","333"]
+			res.render("index",{list:arr},[callback]);
+			5. 设置模板以html后缀结尾的ejs模板引擎
+			注册html模板引擎
+			app.set ('view engine','html');
+			app.set ('views',__dirname);//当前位置
+			app.engine('html',require('ejs').__express);
+			app.engine("html",ejs.__express);
+			express框架中的ejs包使用
+			6. 引入外部公共的ejs文件<%- include ../public/header.ejs  %>
+			7. 设置全局变量 可以在任何页面显示
+			app.locals["username"]=req.session.userinfo.username
+		5) body-parser 获取post请求主体中的数据
+		- 安装
+			npm install body-parser --save
+		- 引入模块
+			var bodyParser=require("body-parser");
+		- 配置中间件  //通过该中间件处理之后会将请求体中post过来的数据保存到req.body中
+			app.use(bodyParser.urlencoded({ extended: false }));  //查询字符串格式,true是用node核心查询字符串解析器querystring进行处理,false是自带的方法处理
+			app.use(bodyParser.json());  //json格式处理
+		- 获取post传值
+			req.body
+		
+	
+			
+		- var express=require('express');  /*引入 express*/ 
+		- var app=new express(); /*实例化 express 赋值给 app*/ 
+		- app.get("网址",function(req,res){   });   当用 get 请求访问一个网址的时候，做什么事情：
+		  app.post("网址",function(req,res){   });  当用 post 访问一个网址的时候，做什么事情： 
+		  app.put('/user', function (req, res) {   res.send('Got a PUT request at /user'); }); // user 节点接受 PUT 请求 
+		  app.delete('/user', function (req, res) {   res.send('Got a DELETE request at /user'); }); // user 节点接受 DELETE 请求 
+			简单静态路由配置
+		- app.get("/user/:id",function(req,res){ var id = req.params["id"]; res.send(id); }); 
+			动态路由配置以及获取动态get传值 
+		- /news?id=2&sex=nan 
+		  app.get('/news, function(req, res) {    console.log(req.query); });  路由里面获取 Get 传值
+		- 托管静态文件
+		  app.use(express.static("public"));  给public目录下面的托管静态文件
+		  匹配虚拟目录的静态web服务
+		  app.use("/status",express.static("public"))
+		
+		- 模块化路由
+			1.后台路由引入express模块
+			var express=require("express");
+			2.使用express.Router类创建模块化、可挂载的路由句柄
+			var router=express.Router();
+			3.后台配置路由
+			router.get("/login",functiong(req,res){
+				res.send("登陆!");
+			}) 
+			4.暴露后台模块
+			module.exports =router;
+			5.主程序引入后台模块
+			var index=require("");
+			6.主程序使用后台路由
+			app.use("/",index);
 
+	2.cookie  cookie-parser
+		  是存储于访问者的计算机中的变量。可以让我们用同一个浏览器访问同一个域名的时候共享数据。
+		- 在HTML文档被发送之前，web服务器通过传送HTTP包头中的Set-Cookie消息把一个cookie发送到用户的浏览器中，如下示例：
+		  Set-Cookie: name=zfpx; Path=/; expires=Wednesday, 09-Nov-99 23:12:40 GMT;
+		- 向客户端发送cookie的2种方案：
+		  1.使用res.writeHead()
+			var time = new Date(new Date().getTime() + 60*1000).toGMTString();
+			res.writeHead(200,{'Set-Cookie':'name=zfpx;pat=/;Expires='+time})
+			缺点:使用res.writeHead只能发送一次头部，即只能调用一次，且不能与res.render共存，否则会报错。
+		  2.使用res.setHeader() 可以写多次还能res.render共存
+		        res.setHeader('Set-Cookie':'name2=zfpx2;path=/;expires='+timeObj+'')
+		- express中cookie-parser的使用
+		- 1.安装 cnpm instlal cookie-parser --save
+		  2.引入 var cookieParser = require('cookie-parser');
+		  3.设置中间件
+		  app.use(cookieParser());
+		  4.设置 cookie   第1个参数是cookie的名字 第2个是cookie的值 第3个是属性
+		  res.cookie("name",'zhangsan',{maxAge: 900000, httpOnly: true}); 
+		  HttpOnly 默认 false 不允许 客户端脚本访问
+		  5.获取 cookie
+		  req.cookies.name
+		- 第3个参数cookie的属性
+		  属性说明
+			- domain: 域名   例如：.aaa.com  多个2级域名共享cookie信息
+			  C:\Windows\System32\drivers\etc  下的hosts 设置本地的ip域名
+			- Expires： 过期时间（秒），在设置的某个时间点后该 Cookie 就会失效，如 expires=Wednesday,
+			- res.cookie('rememberme', '1', { expires: new Date(Date.now() + 900000), httpOnly:true });
+			- maxAge： 最大失效时间（毫秒），设置在多少后失效
+			- secure： 当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中才有效
+			- Path： 表示 在哪个路由下面可以访问cookie ，如 path=/。如果路径不能匹配时，浏览器则不发送这个 Cookie
+			- httpOnly：是微软对 COOKIE 做的扩展。如果在 COOKIE 中设置了“httpOnly”属性为true，则通过程序（JS脚本、applet 等）将无法读取到COOKIE 信息，防止 XSS 攻击产生
+			- singed：表示是否签名cookie, 设为true 会对这个 cookie 签名，这样就需要用res.signedCookies 而不是 res.cookies 访问它。被篡改的签名 cookie 会被服务器拒绝，并且 cookie值会重置为它的原始值
+		        - 加密cookie
+			1.配置中间件的时候需要传参
+			app.use(cookieParser('123456')); 123456其实可以随便传入
+		 	2. 设置 cookie  的时候配置 signed为true
+			res.cookie('userinfo','hahaha',{domain:'.ccc.com',maxAge:900000,httpOnly:true,signed:true});
+			3.signedCookies  调用设置的 cookie
+			console.log(req.signedCookies);
+	3.session express-session 是另一种记录客户状态的机制，不同的是 Cookie  保存在客户端浏览器中，而 session  保存在服务器上。
+		  session 与cookie的区别 关闭浏览器记录会清空
+		  1.安装 express-session
+		  2.引入 express-session   var session=require("express-session");
+		  3.设置官方文档提供的中间件
+			app.use(session({
+    					secret: 'keyboard cat',
+   					resave: false,
+    					saveUninitialized: true
+					}));
+		  4.设置session   req.session.urseinfo="帮办";
+		  5.获取session   req.session.urseinfo 
+		  6.退出session   req.session.cookie.maxAge=0; 重新设置 cookie 的过期时间  
+		                  req.session.destroy(function(err) { })   销毁登陆
+		- session设置中间件时候的一些属性
+			secret 可以随便设置加密,一个 String 类型的字符串，来计算hash值并放在cookie中，使产生的signedCookie 防篡改，作为服务器端生成 session 的签名。
+			name  设置cookie中，保存session的字段名称,默认为 connect.sid,也可以自己设置。
+			resave 强制保存 session 即使它并没有变化,。默认为 true。建议设置成 false。
+			saveUninitialized  强制将未初始化的 session 存储。当新建了一个 session 且未设定属性或值时，它就处于未初始化状态。在设定一个 cookie 前，这对于登陆验证，减轻服务端存储压力，权限控制是有帮助的。（默认：true）。建议手动添加。
+			cookie 设置存放session id的cookie相关选项，设置返回到前端 key 的属性，默认值为{ path: ‘/’, httpOnly: true, secure: false, maxAge: null }。
+			rolling  每个请求都重新设置一个cookie,在每次请求时强行设置 cookie，如果将其设置为true,这将重置 cookie 过期时间（默认：false）
+			store  session的存储方式,默认存放在内存中，也可以使用redis,mongodb等。
+			genid  产生一个新的session_id时，所使用的函数，默认使用uid2这个npm包。
+		- 将session 的信息保存到数据库
+		  1.需要安装 express-session 和 connect-mongo 模块
+		  2.引入模块
+			var session = require("express-session");
+			var connectMongo=require("connect-mongo")(session);
+		  3.配置中间件
+			app.use(session({
+    					secret: 'this is string key',
+    					name:"session_id",
+    					resave: false,
+    					saveUninitialized: true,
+    					cookie:{maxAge:1000*60*30},
+    					rolling:true,
+    					store:new connectMongo({
+        							url:"mongodb://127.0.0.1:27017/test",  //服务器地址
+        							touchAfter:24*3600  //通过设置touchAfter：24 * 3600来设置touchAfter：24 * 3600，在24小时内只会更新一次，无论请求的数量是多少（除了那些会改变会话数据的数据）
+    								})
+
+				}));
+		
 
 
 
