@@ -645,7 +645,7 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 				* start 可选的整数参数。规定在字符串中开始检索的位置。它的合法取值是 0 到 stringObject.length -   如省略该参数，则将从字符串的首字符开始检索。
 			* 返回值 Number  元素在数组中的位置,如果没与搜索到则返回 -1
 
-			
+	
 
 		- 遍历数组
 		- 遍历数组就是将数组中元素都获取到
@@ -658,7 +658,7 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 		
 			数组.forEach(function(value , index , obj){
 			
-			});
+			},thisValue);
 			
 			forEach()方法需要一个回调函数作为参数，
 				数组中有几个元素，回调函数就会被调用几次，
@@ -667,6 +667,30 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 				value:正在遍历的元素
 				index:正在遍历元素的索引
 				obj:被遍历对象
+				thisValue:可选。对象作为该执行回调时使用，传递给函数，用作 "this" 的值。如果省略了 thisValue ，"this" 的值为 "undefined"
+		- 写一个forEach工具方法来兼容ie8
+			var util = {
+				each:(function(){
+					if([].forEach){ //如果forEach存在
+						return function(list,fn,context){
+							list.forEach(fn,context);
+						}
+					}else{
+						return function(list,fn,context){
+							for(var i=0;i<list.length;i++){
+								fn.call(context,list[i],i,list);
+							}
+						}	
+					}
+				})()
+
+			}
+			使用
+			var arr = [1,2,3];
+			util.each(arr,function(item,index,all){
+				console.log(this.name,item,index,all);
+			},{name:'zfpx'});
+
 36.Date
 	- 日期的对象，在JS中通过Date对象来表示一个时间
 	- 创建对象
@@ -2570,25 +2594,67 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 				d. 给oImg绑定onload的事件，如果能触发说明图片加载成功，然后在事件的回调函数中，将真实地址赋值给页面中的img标签,img.src = this.src; img.style.display = "block"; oImg = null;
 				e. 在onload的事件外面可以处理图片正在加载中的事情。给每个img添加一个自定义属性isLoad = true;后期用于判断加载过就不在处理了
 
-三十二、惰性思想以及js工具包的封装
+三十二、js工具包的封装和常用思想
+	1.惰性函数
 	* 能执行一次就搞定的绝对不会执行多次
-	var tools = (function(){
-		//方式一
-		var flag = "getComputedStyle" in window;//flase  ie6-8
-		function getStyle () {
-			if (flag){
-			
-			}else {
-			
-			}
+	* 惰性函数，第1次计算得到的值，可以直接使用，然后用这个函数重置外部函数，以后就不用计算，也不用判断了。
+		实例：
+		function Max1() {return 1;}
+		function Max2() {return 2;}
+		function Max3() {return 3;}
+		function getMax() {
+		    var fns = [Max1,Max2,Max3];
+		    var MaxFn = fns[0],max = fns[0]();
+		    for (var i=1; i<fns.length; i++){
+		        var val = fns[i]();
+		        if (val > max){
+		            max = val;
+		            maxFn = fns[i];
+		        }
+		    }
+		    getMax = maxFn;
+		    return max;
 		}
-
-		方式二：
-
-		return {
-			getStyle:getStyle
-		};
-	})();
+	2. 默认配置的extends继承
+	* 用户输入的配置，修改掉默认的配置，但是不覆盖默认配置，默认配置下次还能继续使用
+	var util = {
+		extends:function(_default,config){ //_default默认属性，config用户输入的属性
+			var result = {};
+			for(var attr in _default){
+				result[attr]=config[attr] || _default[attr];
+			}
+			return result;
+		}
+	}
+	3. 柯里化函数
+	*柯里化就是预先将某些参数传入，得到一个函数。但是预先传入的参数被保存在闭包中。
+	应用：写一个判断数据类型的方法
+	function isType(type){
+		return function(obj){
+			return Object.prototype.toString.call(obj) === '[object '+type+']'
+		}
+	}
+	var util = {};
+	var typeArr = ['Array','Object','Function','Date','RegExp']
+	typeArr.forEach(function(type){
+		util['is'+type] = isType(type);
+	});
+	使用
+	util.isDate(new Date())  //true 
+	4. 查询字符串
+	* 将一个对象转换成一个&连接的查询字符串
+	function to(data){
+		return Object.keys(data).map(function(key){
+			return key + '=' + data[key];
+		}).join('&');
+	}
+	使用console.log(to({name:'zfpx',age:6}))  //'name=zfpx&age=6'
+	5. encodeURIComponent 和 decodeURIComponent
+	* url是ASCII码(只能表示128种字符)格式的，并且特殊字符有特殊含义
+	* 需要把正常参数里的特殊字符和不能用ascii码表示的字符进行转义成十六进制的转义序列
+	console.log(new Buffer('?'),encodeURIComponent('?')); // <Buffer 3f>   '%3F'
+	console.log(new Buffer('中'),encodeURIComponent('中')); // <Buffer e4 b8 ad>   '%e4%b8%ad'
+	转回来用decodeURIComponent()
 
 三十三、 进制的转换
 	1. 任意进制转换成10进制
@@ -2601,4 +2667,80 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 	console.log((17).toString(16)); //11
 	console.log((33).toString(32)); //11
 	注意：(33) 括号的作用是将一个number转换成对象,也可以这样写 33. 
+三十四、Object.keys方法之详解
+	* 在实际开发中，我们有时需要知道对象的所有属性，原生js给我们提供了一个很好的方法：Object.keys()，该方法返回一个数组
+	1. 传入对象，返回属性名
+		var obj = {'a':'123','b':'345'};
+		console.log(Object.keys(obj));  //['a','b']
+	2. 传入字符串，返回索引
+		var str = 'ab1234';
+		console.log(Object.keys(obj));  //[0,1,2,3,4,5]
+	3. 构造函数 返回空数组或者属性名
+		 function Pasta(name, age, gender) {
+			this.name = name;
+			this.age = age;
+			this.gender = gender;
+			this.toString = function () {
+				return (this.name + ", " + this.age + ", " + this.gender);
+			}
+		}
+		console.log(Object.keys(Pasta)); //console: []
+		var spaghetti = new Pasta("Tom", 20, "male");
+		console.log(Object.keys(spaghetti)); //console: ["name", "age", "gender", "toString"]
+	4. 数组 返回索引
+		var arr = ["a", "b", "c"];
+		console.log(Object.keys(arr)); // console: ["0", "1", "2"]
+
+三十五、 promise
+	* 菜鸟教程http://www.runoob.com/w3cnote/javascript-promise-object.html
+	* promise 表示一个异步操作的最终结果，与之进行交互的方式主要是then方法。
+	* 跟状态有关， 初状态-->成功态 会执行成功的函数then()，并且把成功的数据当做参数传入
+		       初状态-->失败态 会执行失败的函数fail()，并且把失败的原因当做参数传入
 	
+	
+	* 简单原理代码
+		//延迟对象  管理内部状态的
+		var Defer = function (){
+			var func;  //存储成功时候调用的函数，也就是then方法里面的参数回调
+			var failFn;//存储失败时候调用的函数，也就是fail方法里面的参数回调
+			return {
+				resolve:function(data){ //异步操作成功
+					func(data) //成功后调用成功的函数
+				},
+				reject:function(err){ //异步操作失败
+					failFn(err) //失败后调用失败函数
+				},
+				promise:{
+					then:function (fn1){ //promise有then方法
+						func = fn1; //将then方法传递过来的函数保存到func，当成功的时候调用
+						return this; //这里then是readFile调的，所以this是readFile，返回this是为了链式调用
+					}
+					fail:function (fn2){ //promise有fail方法
+						failFn = fn2; //将fail方法传递过来的函数保存到failFn，当失败的时候调用
+						return this; //这里fail是readFile调的，所以this是readFile，返回this是为了链式调用
+					}
+
+				}
+			
+			}
+		}
+		//模拟写一个readFile方法
+		function readFile(filename,cb){
+			var defer = Defer();
+			fs.readFile(filename,'utf8',function(err,data){
+				if(err){
+					defer.reject(err); //读取文件失败时，调用失败函数
+				}else{
+					defer.resolve(data);//读取文件成功时，调用成功函数
+				}
+			})
+			return defer.promise;
+		}
+		
+		使用
+		readFile('index.html').then(function(data){ //then成功时应该被调用的函数
+			console.log(data);
+		}).fail(function(err){ //fail失败时应该被调用的函数
+			console.error(err);
+		})
+
