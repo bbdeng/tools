@@ -2744,3 +2744,27 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 			console.error(err);
 		})
 
+三十六、 ES6
+	- 将ES6转换成ES5的插件
+	babel-cli
+	* 安装
+	npm install babel-cli -g
+	npm install --save-dev babel-preset-es2015
+	* 配置文件
+	在当前项目下创建一个后缀为 .babelrc的文件
+	里面的内容为
+	{
+		"presets":["es2015"],
+		"plugins":[]
+	}
+	* 将es6转换成es5
+	babel app.js -o app.es5.js
+	* babel常用命令
+		* babel --help 常看帮助命令
+		* babel -o 输出到一个文件 babel mobile.js -o build.js
+		* babel -w 提供watch方法  babel -w mobile.js -o mobile.build.js
+		* babel -s 生成sourcemap  babel -s -w mobile.js -o mobile.build.js
+		* babel -d 指定要编译的目录 babel -d es5/ es6/ 
+
+
+

@@ -1,0 +1,554 @@
+AngularJS 
+
+1. AngularJS 简介
+* AngularJS 是一个 JavaScript 框架，它是一个以 JavaScript 编写的库。它可通过 <script> 标签添加到 HTML 页面。
+* AngularJS 通过 指令 扩展了 HTML，且通过 表达式 绑定数据到 HTML。
+* AngularJS 是以一个 JavaScript 文件形式发布的，可通过 script 标签添加到网页中：
+基本小例子
+<script src="angular.js"></script> 
+</head>
+<body>
+<p>尝试修改以下表单。</p>
+<!--3.ng-app指令指明了应用，那一段用angular添加该属性，把指令放在这里表示该区域都被angular接管了，ng-app之外的元素无法管理，将mudule的名字放入-->
+<!--4.ng-controller 指明了控制器，用ng-controller指令将控制器绑定到某个元素上，将控制器的名字写入-->
+<div ng-app="myApp" ng-controller="myCtrl">
+名: <input type="text" ng-model="firstName"><br>
+姓: <input type="text" ng-model="lastName"><br>
+<br>
+<!--5. 绑定表达式-->
+姓名: {{firstName + " " + lastName}}
+</div>
+<script>
+//1.创建mudule模块
+// 第1个参数模块的名字，第2个参数依赖的其他模块，第2个参数就算为空也不可省略，只写一个参数表示获取对应的模块，写2个参数表示创建模块
+var app = angular.module('myApp', []);
+//2.创建控制器的名字和定义
+//第1个参数控制器的名字，第2个参数控制器的定义
+app.controller('myCtrl', function($scope) {
+    $scope.firstName= "John";
+    $scope.lastName= "Doe";
+});
+</script>
+	
+
+2.指令系统
+* AngularJS 通过被称为 指令 的新属性来扩展 HTML。
+* AngularJS 通过内置的指令来为应用添加功能。
+常用指令：内置指令
+	* AngularJS 指令是扩展的 HTML 属性，带有前缀 ng-。
+	1) ng-app 指令
+		* 指令初始化一个 AngularJS 应用程序入口。
+		* 该指令告诉 AngularJS，<div> 元素是 AngularJS 应用程序 的"所有者"。
+		* ng-app 指令通过 AngularJS 完成自动初始化和创建应用根作用域 (相当于window作用域)。
+		* 同时载入和指令内容相关的模块，并通过拥有ng-app指令的标签为根节点开始编译其中的DOM。和原本的DOM根节点无关，只控制其内部的内容，根作用域之前的不管。
+		* 引用方法：
+			<div ng-app='myApp'></div>
+			<div ng-app></div> //也可以不写 默认的
+	2) ng-init 指令
+		* ng-init 指令为 AngularJS 应用程序定义了 初始值。
+		* 通常情况下，不使用 ng-init。您将使用一个控制器或模块来代替它。
+	3) ng-model 指令	
+		* 该指令把元素值（比如输入域的值）绑定到应用程序。
+		* ng-model 指令其他功能
+			* 为应用程序数据提供类型验证（number、email、required）。
+			* 为应用程序数据提供状态（invalid、dirty、touched、error）。
+			* 为 HTML 元素提供 CSS 类。
+			* 绑定 HTML 元素到 HTML 表单。
+	4) ng-bind 指令
+		* ng-bind和AngularJS表达式功能相似，但ng-bind时在angular解析渲染完毕后才将数据显示出来的。
+		* 好处是，不会在首次渲染的时候让用户看到{{}}
+		用法：<span ng-bind="name"></span>
+	5) ng-repeat 指令
+		* 第1种用法
+			ng-repeat="key in array"
+			ng-repeat="key in obj"
+		* 第2中用法
+			ng-repeat="(key,value) in errors()"  
+			* errors() 是一个方法调用
+			* 表示叠带方法的调用返回值
+		* ng-repeat 指令对于集合中（数组中）的每个项会 克隆一次 HTML 元素。
+		例子：
+		<div ng-app="" ng-init="names=[
+			{name:'Jani',country:'Norway'},
+			{name:'Hege',country:'Sweden'},
+			{name:'Kai',country:'Denmark'}]">
+		<p>循环对象:</p>
+		<ul>
+			<li ng-repeat="x in names">
+				{{ x.name + ', ' + x.country }}
+			</li>
+		</ul>
+		</div>
+	6) ng-click 指令
+		* 用ng-click定义一个单击事件。
+		* <button ng-click="click= !click"></button>  //click=false起始赋值为false，点击对click变量进行取反操作
+	7) ng-hide 指令
+		* 控制元素的显示与隐藏
+		* <div ng-hide="click"></div>  //click变量值为false的时候显示，为true的时候隐藏。
+	8) ng-show 指令(boolean)
+		* 控制元素的显示与隐藏
+		* 和ng-hide相反，当值为true为显示，false为隐藏。
+	9) ng-class 指令
+		* 用于动态自定义DOM元素的CSS
+		* <div ng-class="{'has-error':username.length<6}"></div> 表示当用户名username变量的长度小于6位的时候，value的值为true，则添加has-error类样式
+	10) ng-include 指令
+		* 就是将多个页面的公共页面提取出来
+		* <div ng-include="'header.html'"></div>
+		  <div>中间内容</div>
+		  <div ng-include="'footer.html'"></div>
+		  * 注意：ng-include后面的值需要带"''"这样才能把其当做一个字符串路径处理，不然会被当做变量。
+	11) ng-transclude 和transclude=true配合使用 需要在trmplate属性值中使用ng-transclude指明插入点
+
+自定义指令
+	app.directive("runoobDirective",function(){ 创建自定义的指令
+		return {
+			 restrict : "C", //通过类名调用
+			 template : "<h1>自定义指令!</h1>"
+		} 
+	   })
+	   * 注：使用驼峰法来命名一个指令， runoobDirective, 但在使用它时需要以 - 分割, runoob-directive:
+	   - 调用指令的4种方式
+		* <runoob-directive></runoob-directive> 元素名
+		* <div runoob-directive></div> 属性
+		* <div class="runoob-directive"></div>  类名
+			注：该方法需要在return对象中设置 restrict 的值为 "C" 才能通过类名来调用指令。	
+		* <!-- directive: runoob-directive --> 注释
+			注：该方法需要在return对象中添加 replace：true 属性,还必须设置设置 restrict 的值为 "M" 才能通过注释来调用指令。
+	  - 指令定义对象的配置项
+	        * template(string): 使用template指定的HTML标记替换指定内容(或指令自身)，如果replace=true，那么HTML片段替换指令本身，如果transclue=true则包裹指令的内容。
+		* templateUrl:'trans.html' 如果template中的html框架过于负责，可以通过外链html文件来处理。
+		* restrict(string): 用来限制指令在HTML模板中出现的位置
+			- 限制使用
+				* restrict 值可以是以下几种:
+				* E 作为元素名使用 <my-from></my-from>
+				* A 作为属性使用  <div my-from></div>
+				* C 作为类名使用  <div class="my-from"></div>
+				* M 作为注释使用  <!-- directive:my-from --> 需要加replace:true
+				* restrict 默认值为 EA, 即可以通过元素名和属性名来调用指令。
+		* replace(boolean): 是否替换原有的DOM元素，如果为true原来的DOM会被template替换，里面的内容也会被替换。当为false时，将使用tempalte只替换指令元素的内容。
+			* 注意：replace为true时，要求template模板内容有且只有一个根节点，也就是说<h1>内容</h1>
+		* transclude(boolean,element) 是否保留原有指令的内部元素，如果为true，则会暂存起来，然后可以通过<span ng-transclude></span>重新调用回来
+			* 要点：1. 需要首先声明transclude=true,该DOM元素会被暂存起来。
+			        2. 需要在trmplate属性值中使用ng-transclude指明插入点。
+		* scope(boolean,{}) 指令创建私有的作用域
+			* 默认为false，不会创建私有作用域，改为true会创建私有作用域，变量独立
+			- scope的绑定策略
+				* @: 把当前属性作为字符串传递。你还可以绑定来自外层scope上的值，在属性中插入{{}}即可
+					* 注：namey:'@namex' 会将namex的属性值当做字符串解析
+				* =: 与父scope中的属性进行双向绑定,namey:'=namex'写等号，就会将namex的值当做$scope上的属性解析
+				* &: 传递一个来自父scope中的函数，稍后调用
+				
+				例子：
+				<body ng-app="zfpxMod" ng-controller="zfCtrl">
+				①<person namex="{{zhangsan}}"></person>
+				②<person namex="zhangsan"></person>
+				③<person namex="zhangsan" greetx="greet(name,word)"></person>
+
+				</body>
+				<script src="angular.js" type="text/javascript" charset="utf-8"></script>
+				<script type="text/javascript">
+					var zfpxMod=angular.module('zfpxMod',[]);
+					zfpxMod.controller('zfCtrl',function ($scope) {
+						$scope.zhangsan = '张三';
+						$scope.greet = function (name,word){
+							alert(name+" "+word);
+						}
+					});
+					zfpxMod.directive('person',function (){
+						return {
+							scope:{
+								①namey:'@namex'
+								②namey:'=namex'
+								③greety:'&greetx'
+
+							},
+							①template:'<div>姓名:{{namey}}</div>'
+							②template:'<div>姓名:{{namey}}</div><input type="text" ng-model="namey"></input>'
+							③template:'<div>姓名:{{namey}} <input type="text" ng-model="word"></input><div ng-click="greety({name:namey,word:word})">click</div></div>'
+						}
+
+					})
+
+					</script>
+		* controller(Function) 自定义一个控制器用于添加一些属性和方法后面的指令调用
+			controller:function($scope,$element,$attrs){}
+		* require:'directiveName' 该属性的属性值为控制器或者指令的名称，使用该属性后，link会多一个参数controller是controller:function的实例，该参数就是引用的外部控制器，可以调用外部控制器的一些方法。
+			* require:'directiveName1,directiveName2,directiveName3' 可以引入多个，同样在link后面第4个参数之后就是引入的控制器。
+			* require:'^directiveName' 还可以在前面加^，如果不加表示找同级元素上的指令，如果加了表示找同级或者上级上面依赖的指令。
+			* require参数的值可以用下面的前缀进行修饰，这会改变查找控制器时的行为：
+				* ? 如果在当前指令中没有找到所需要的控制器，会将null作为传给link函数的第四个参数。
+				* ^ 如果添加了^前缀，指令会在上游的指令链中查找require参数所指定的控制器。
+				* ?^ 将前面两个选项的行为组合起来，我们可选择地加载需要的指令并在父指令链中进行查找。
+				* 没有前缀 如果没有前缀，指令将会在自身所提供的控制器中进行查找，如果没有找到任何控制器（或具有指定名字的指令）就抛出一个错误。
+
+		* compile(Function) 编译模板用的，对原始的模板进一步的编译，适合修改节点，插入子模板，最后return返回link函数
+			compile:function(element,attrs){
+				return function(scope,element,attrs，controller){} //这里return的函数就是外部的link函数，如果这里写了外部的link函数将不会执行了。
+			}
+		* link(Function) 如果需要在指令中操作DOM，我们需要在对象中定义link属性。将scope和模板进行串联起来
+			link:function(scope,element,attrs,controller){}
+			* 是一个函数，该函数有4个参数
+				* scope 指令对应的scope作用域，如果指令没有定义自己的本地作用域，那么传入的就是外部的作用域对象；
+					* 创建一个新的scope的方法,var subscope = scope.$new(true);如果这里的参数为true则表示新建的subscope为独立的scope和原来的scope没有关系；如果是false是表示新建的subscope继承原来的scope，原来的scope是父，新的为子。
+				* element 当前DOM元素本身经过jqLite封装，如果使用了template属性，那么element对应变换后的DOM对象的jqLite封装；
+				* attrs当前DOM元素所有属性的集合，这是一个Hash对象，每个键是驼峰规范后的属性名
+				* controller 控制器的实例，在所有指令间共享，可以作为指令交流的通道。
+		* compile 和 link 的一些区别和联系
+			* compile函数用来对模板自身进行转换，而link函数负责在模板和视图之间进行动态关联。
+			* scope在连接阶段才会被绑定到编译之后的link函数上
+			* compile函数仅在编译阶段运行一次，而对于指令的每个实例，link函数都会执行一次
+		
+	
+
+
+	- 装饰型指令：是为DOM添加行为或使之具有某些能力，如可拖动、添加样式等。
+	//定义一个指令      指令名称 指令定义
+	mudule.directive('red',function () {
+		return {
+			link:function (scope, element) { //第1个参数scope作用域，第2个参数element当前DOM元素本身
+				element.css('color','red');  //element类似jquery对象，可以使用一些jquery对象的方法。
+				element.on('click',function () {
+					console.log(this); //这里的this是DOM元素
+				})
+			}
+		}
+	})
+	使用：直接在html标签中添加属性即可，<div red></div>
+	
+	- 组件型指令：是为了将复杂的视图分离，实现高内聚低耦合，是自封装和内聚性的整体，包含了视图和交互逻辑，比如登录框。
+	mudule.directive('myfrom',function () {
+		return {
+			template:'<form>用户名<input type="text" name="username"></form>'
+		}
+	})
+	使用：直接在html页面中添加自定义标签即可<myfrom></myfrom>
+
+
+3. 表达式
+* AngularJS 表达式写在双大括号内：{{ expression }}。
+* AngularJS 表达式把数据绑定到 HTML，这与 ng-bind 指令有异曲同工之妙。
+- 2种绑定数据到页面的方法
+	1) <div ng-app="" ng-init="points=[1,15,19,2,40]">
+	   <p>第三个值为 <span ng-bind="points[2]"></span></p>
+	   </div>
+	2) <div ng-app="" ng-init="points=[1,15,19,2,40]">
+	   <p>第三个值为 {{ points[2] }}</p>
+	   </div>
+* AngularJS 表达式 与 JavaScript 表达式
+	* AngularJS 表达式 很像 JavaScript 表达式：它们可以包含文字、运算符和变量。
+	* 与 JavaScript 表达式不同，AngularJS 表达式可以写在 HTML 中。
+	* 与 JavaScript 表达式不同，AngularJS 表达式不支持条件判断，循环及异常。
+	* 与 JavaScript 表达式不同，AngularJS 表达式支持过滤器。
+
+
+4. 模块之间如何依赖注入
+	1) 传递参数多于一个表示新建模块；空数组代表模块不依赖其他模块
+	var module = angular.module('myModule',[]);
+	2) 只传递一个参数(模块名)，代表获取模块，如果模块不存在，angular框架会抛出异常
+	var module = angular.module('myModule');
+	3) 还可以在第2个数组中添加依赖的模块
+	var myModule1 = angular.module('myApp',[]);
+	var myModule2 = angular.module('myModule',['myApp']);
+	* 表示本模块myModule依赖myApp模块，会先加载myApp，然后在加载本模块
+	* 注意模块之前的控制器命名不可相同，如果相同后者加载进来的会覆盖前面加载的。
+
+5. 表单验证
+	- 表单验证需要做的事情
+	* 定义验证规则，验证有效性
+	* 显示验证结果
+	* 禁用HTML5自带验证，给表单form标签上添加novalidate="novalidate"
+	* 用户输入后,angular会依次调用验证器进行验证，全部成功时model会变成用户输入的值
+	* 不成功时则保留原值，并在model上增加一个$error对象
+	
+	* 当angular控制器下存在form表单时，angular会自动的对表单进行处理，并且在自己的$scope对象上挂一个表单属性，表单的属性名为form标签中name指定的值。
+	* 如果<form name="userForm">可以通过{{userForm}}在页面输出表单的对象信息，也可以通过$scope.userForm来获取
+		* $dirty 表单中任何一项是否输入过
+		* $pristine 表单中任何一项尚未输入过 
+		$dirty和$pristine是一对相反的
+		* $error 存放错误信息
+		* $invalid 表单数据是否无效，只要有一项无效则整个表单无效
+		* $valid 与$invalid相反
+		* $name 表单的名字
+		* $submitted 表单是否被提交过
+		
+		* $email 表单各个输入框的model
+			* 每个input都会有一个验证规则，下面是email的一些常用的属性
+			* $invalid 表单数据是否无效，只要有一项无效则整个表单无效
+			* $valid 与$invalid相反
+			* $dirty 表单中任何一项是否输入过
+			* $pristine 表单中任何一项尚未输入过
+			* $viewValue 视图值 input.value
+			* $modelValue 模型值 scope 属性上的值
+			* $error 存放出错信息
+			上面是属性，下面是方法 
+			* $setValidity 设置合法 
+			* $setViewValue 设置视图的值
+			* $parsers 从视图到模型中的过滤器
+			* $formatters 从模型到视图的过滤器
+
+6. 服务组件
+	1) 创建服务组件
+	* 定义一个具有$get方法的构造函数,然后使用模块的provider方法进行登记
+	用法:
+	创建模块
+	angular.module('myModule',[]);
+	在模块中进行登记
+	angular.module('myModule').provider('myService',function(){ //这个function是定义一个服务的构造函数
+		this.$get = function (){
+			return ... 框架都是定死的 这里return回去的东西 就是后面注入得到的东西
+		}
+	
+	})
+	引入控制器中使用
+	angular.module('myModule').controller('myCtrl',function($scope,$element,$attrs,myModule){
+		这里的myModule参数，就是上面return ...的内容,如果...是一个函数，则可以调用。
+	})
+
+	2) 可配置的服务
+	* 有时我们希望在不同的场景下可以有不同的行为，这意味着服务可以进行配置。
+	angular.module('myModule').config('myServiceProvider',function(myService){
+		myService.add() //这里就可以调用myService里面写好的函数，对服务进行配置
+	})
+	* 调用config() 方法可以对服务进行配置，当然服务的配置方法需要写在provider的fun中。第1个参数是 服务名+Provider，第2个参数是一个函数，对服务进行配置
+ 	* 注意：服务提供者provider对象在注入器中的登记名称是:服务名+Provider。
+
+	3) factory方法
+	* factory方法要求提供一个对象工厂，调用该类工厂将返回服务实例。
+	angular.module('myModule').factory('myService',function(){
+		return ... 这里直接return...的内容就是注入服务后得到的内容。
+	})
+
+	就是简化了写法，用provider方式写为
+	angular.module('myModule').provider('myService',function(){
+		this.$get = function (){
+			return ...  //这里直接return...的内容就是注入服务后得到的内容。
+		} 
+	})
+
+	4) service方法
+	* service方法要求提供一个构造函数，AngularJS使用这个构造函数创建服务实例：
+	angular.module('myModule').service('myService',function(){
+		this.method1 = function() {}
+		//可以写一些方法，和属性注入的时候得到实例使用
+	})
+
+	5) value方法
+	* 有时我们需要在不同的组件之间共享一个变量，可以将这种情况视为一种服务：provider返回的总是变量的值。
+	angular.module('myModule').value('myService',{
+		"+":function(){return a+b}
+		"-":function(){return a-b}
+	})
+
+	6) constant方法
+	* 有时我们需要在不同的组件之间共享一个常量，可以将这种情况视为一种服务，
+	angular.module('myModule').constant('myService',"465413215")
+	注意：constant和value方法不同，angularJS并没有将constant方法封装成一个provider，而仅仅是在内部登记这个值。这使得常量在angularJS的启动阶段就可以使用(创建任何 服务之前)：你可以将常量注入到模块的config()方法中进行配置。
+	
+	7) decorator方法
+	* 有时候问们希望给扩展一些angular自身的功能，又不能修改源码，此时可以用decorator来劫持原来的服务，对原来的服务进行修改。
+	angular.module('myModule').config(function($provide){ //$provide是系统提供的服务，里面放着所有的配方。
+		$provide.decorator('$log',function($delegate){ //$log 系统的一个服务，将该服务进行拦截修改。$delegate是$log服务生成的一个实例
+			$delegate.error = function () {} //$delegate.error 即对$log.error方法进行重写，修改。
+			return $delegate; //将修改后的$provide对象返回，以后别人在调用$log服务就会重写后的服务。
+		})
+	})
+
+	8) 拦截器
+	* $httpProvider中有一个interceptors数组，而所谓拦截器只是一个简单的注册到了数组中的常规服务工厂。
+	angular.module('myModule').factory('bookInterceptor',function($log){
+		return {
+			request:function(config){
+				$log.log('request')
+				config.url = 'stt.json' //发送请求到后台之前执行，修改请求地址
+				return config;
+			},
+			response:function(response){
+				
+				return response.data;
+			},
+			requestError:function(){},
+			responseError:function(){},
+		}
+	})
+	angular.module('myModule').config('$httpProvider',function($httpProvider){
+		$httpProvider.interceptors.push('bookInterceptor');
+	})
+
+	使用，此时使用$http已经是被拦截处理过的
+	angular.module('myModule').controller('zfCtrl',function($http){
+		$http.get('books.json').success(function(data){
+			console.log(data) //这里的data已经经过上面拦截器处理过了，本来是一个对象，需要data.data来获取数据.
+		})
+	})
+
+
+	*拦截器功能
+	* 通过实现request方法拦截请求：该方法会在$http发送请求到后台之前执行，因此你可以修改配置或做其他操作。
+	* 通过实现response方法拦截响应: 该方法会在$http 接受到从后台过来的响应之后执行，因此你可以修改响应或做其他操作。
+	* 通过实现requestError方法拦截请求异常：有时候一个请求发送失败或者被拦截器拒绝了。
+	* 通过实现responseError方法拦截响应异常：有时候我们后台调用失败了。
+
+7. 过滤器
+	* 过滤器也是一种服务，负责对输入的内容进行处理转换，以便更好地向用户显示。
+	* 过滤器在模板中用{{}}使用
+		{{expression | filter1:arg1:arg2 | filter2}}
+		* expression变量名
+		* filter1过滤器的名字
+		* arg1,arg2参数1和参数2
+	* 过滤器在代码中使用
+		* 过滤器在注入器中注册时，名称需要加后缀:Filter。例如:currency的名称是currencyFilter
+		angular.module('myModule',[]).controller(function($scope,numberFilter){})
+	* 创建自定义过滤器
+		* 必须使用模块的 filter()接口注册服务
+		* 必须提供对象工厂factory方法
+		* 对象工程必须返回一个过滤器函数，其第1个参数为输入变量。
+		代码演示
+		angular.module('myModule',[]).filter('add',function(){
+			return function(input){
+				var sum = 0
+				for (var i=0;i<arguments.length;i++){
+					sum+= arguments[i];
+				}
+				return sum;
+			}
+		})
+
+		使用
+		{{100 | add :10:5:3}} //其实使用过滤器就相当于运行了return的函数，第1个参数input为进入进去的值100
+
+8. 路由
+	1)angular-route
+	* 先下载安装
+	bower install angular-route
+	* 然后引入使用
+	* 在我们的应用main模块里面注入ngRoute依赖就可以了
+	* 在路由模块里面的.config()方法里面注入$routeProvider用于实现路由配置
+	* 使用ng-view指令告诉angular页面的哪一部分是我们希望转换的
+	angular.module('myApp',['ngRoute']).config(function($routeProvider){
+		$routeProvider.when('/day/:id',{
+			templateUrl:'views/main.html',
+			controller:function(){}
+		})
+		$routeProvider.otherwise({
+			redirectTo:'/'
+		})
+	})
+	HTML页面中使用
+	<div ng-view> </div>
+
+	* $routeProvider.when('路径',{}) 方法
+		* 第1个参数是路径url
+		* 第2个参数是对该路由的操作对象。
+	* $routeProvider.otherwise()方法定义了当应用找不到指定路由的时候跳转的路由
+
+	2)angular-ui-route
+	* 安装
+	bower install angular-ui-route
+	* 然后引入JS文件使用
+	* 在我们的应用main模块里面注入ui.router依赖就可以了
+	* 在路由模块里面的.config()方法里面注入$routeProvider用于实现路由配置
+	* 使用ui-view指令告诉angular页面的哪一部分是我们希望转换的
+	代码演示
+	angular.module('myApp',['ui.route']).config(function($stateProvider,$urlRouterProvider){
+		$stateProvider.state('index',{
+			url:'/index',
+			template:'index template'
+		})
+		$stateProvider.state('user',{
+			url:'/user',
+			controller:function($scope,$http){
+				$http.get('books.json').then(function(data){
+					$scope.books = data.data;
+				})
+			},
+			template:'<ul><li ng-repeat="book in books">{{book}}</li></ul>'
+		})
+		//当此URL找不到任何状态的时候重定向到/index
+		$urlRouterProvider.otherwise('/index')
+	})
+
+	HTML页面中使用
+	<a ui-sref="index">index</a>
+	<a ui-sref="user">index</a>
+	<div ui-view></div>
+	* 状态被激活时，它的模板会自动插入到父状态对应的模板中包含ui-view属性的元素内部
+	* 如果是顶层状态，那么它的父模板就是index.html
+	
+	激活状态的方法
+	* 导航到与状态相关联的url
+	* 点击包含ui-sref指令的连接;
+	* 调用$state.go()方法
+		angular.module('myApp').controller('zfCtrl',function($scope,$state){
+			$scope.go = function(sta){ 
+			//在$scope上挂一个go方法，然后在页面中给元素绑定点击事件，当点击是时候调用go方法实现跳转
+				$state.go(sta)
+			}
+		})
+		<div ng-controller="zfCtrl">
+			<button ng-click="go('index')">切换到主页状态</button>
+			<button ng-click="go('user')">切换到用户状态</button>
+		</div>
+	* 解决器 resolve
+		* 可以使用resolve为控制器提供可选的依赖注入项。
+		* resolve配置项是一个由key/factory构成的对象。
+		* key 注入控制器的依赖项目名称,也就是服务的别名
+		* factory函数是返回值将作为依赖注入项，如果函数是一个耗时的操作，那么控制器必须等待该函数执行完成才会被实例化。
+		代码演示
+		angular.module('myApp',['ui.route']).config(function($stateProvider){
+			$stateProvider.state('book',{
+				url:'/book',
+				resolve:{
+					books:function($q){
+						var defer = $q.defer();
+						setTimeout(function(){
+							defer.resolve({"name":"node.js"},{"name":"javascript"})
+						},5000)
+						return defer.promise;
+					}
+				}
+				controller:function($scope,books){
+					$scope.books = books;
+				},
+				template:'<ul><li ng-repeat="book in books">{{book}}</li></ul>'
+			})
+	
+		})
+	
+	权限控制
+	* 给$state对象提供配置，指定必须登录才能访问的状态
+	* 监听路由事件
+		- $stateNotFound 当状态无法找到时发生
+		- $stateChangeStart 切换状态前
+		- $stateChangeSuccess 切换状态后
+		- $stateChangeError 当模板解析过程中发生错误时触发
+	代码演示
+	angular.module('myApp',['ui.route']).config(function($stateProvider){
+		$stateProvider.state('index',{
+			url:'/index',
+			template:'index template'
+		})
+		$stateProvider.state('user',{
+			url:'/user',
+			need_login:true, //自定义一个属性，表示该路由需要登录后才能访问
+			controller:function($scope,$http){
+		 		$http.get('books.json').then(function(data){
+					$scope.books = data.data;
+				})
+			},
+			template:'<ul><li ng-repeat="book in books">{{book}}</li></ul>'
+		})
+
+	})
+	angular.module('myApp').run(function($rootScope,$state){
+		$rootScope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams){
+			if(toState.need_login){
+				if(!$rootScope.username){
+					alert('您还没有登录');
+					event.preventDefault(); //取消默认跳转事件，用户没登录不让用户跳转到指定页面
+					return;
+				}
+
+			}
+		})
+	})
+	
