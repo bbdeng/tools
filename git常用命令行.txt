@@ -65,6 +65,7 @@ git remote rename <旧名称> <新名称> 修改远程库名称
 
 23.git add 添加 多余文件
 撤销操作
+git rm -r .idea --cached 表示将文件从暂存区删除，--cached表示只删除暂存区的文件不删除原始文件
 git reset --mixed（默认） :取消了commit ，取消了add
 git reset –mixed：此为默认方式，不带任何参数的git reset，即时这种方式，它回退到某个版本，只保留源码，回退commit和index信息
 git reset –soft：回退到某个版本，只回退了commit的信息，不会恢复到index file一级。如果还要提交，直接commit即可

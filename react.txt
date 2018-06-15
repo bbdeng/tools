@@ -1,0 +1,137 @@
+外部引入js文件网站www.bootcdn.cn
+##一. 几个重要概念理解
+  * 模块与组件
+    * 模块:
+      * 理解: 向外提供特定(局部)功能的js程序, 一般就是一个js文件
+      * 为什么: js代码更多更复杂
+      * 作用: 复用js, 简化js的编写, 提高js运行效率
+    * 组件: 
+      * 理解: 用来实现特定功能效果的代码集合(html/css/js)
+      * 为什么: 一个界面的功能更复杂
+      * 作用: 复用编码, 简化项目编码, 提高运行效率
+  * 模块化与组件化
+    * 模块化:
+      * 当应用的js都以模块来编写的, 这个应用就是一个模块化的应用
+    * 组件化:
+      * 当应用是以多组件的方式实现功能, 这上应用就是一个组件化的应用
+ ##二. ReactJS是什么?
+  1. Facebook开源的一个js库
+  2. 一个用于动态构建用户界面的js库
+  3. React的特点
+    * Declarative(声明式编码)
+    * Component-Based(组件化编码)
+    * Learn Once, Write Anywhere(支持客户端与服务器渲染)
+    * 高效
+    	* React高效的原因
+		a). 虚拟(virtual)DOM, 不总是直接操作DOM
+		b). 高效的DOM Diff算法, 最小化页面重绘	
+    * 单向数据流
+  4. ReactJS官网：http://facebook.github.io/react/
+  5. Github地址：https://github.com/facebook/react
+
+##三.ReactJS相关js库
+  1相关库
+    react.js: React的核心库
+    react-dom.js: 提供操作DOM的扩展库
+    babel.min.js: 解析JSX语法代码转为纯JS语法代码的库
+  2在页面中导入js
+    <script type="text/javascript" src="../js/react.js"></script>
+    <script type="text/javascript" src="../js/react-dom.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+  3编码
+    <div id="example"></div>
+    <script type="text/babel"> //必须用babel
+      ReactDOM.render(<h1>Hello, React!</h1>, document.getElementById('example'));
+    </script>
+##三.JSX
+  1.虚拟DOM
+    1). React提供了一些API来创建一种 `特别` 的一般js对象
+      * var element = React.createElement('h1', {id:'myTitle'}, 'hello');
+      * let element = <h2>hello react</h2>
+      * 上面创建的就是简单的虚拟DOM对象
+    2). 虚拟DOM对象最终都会被React转换为真实的DOM
+    3). 我们编码时基本只需要操作react的虚拟DOM相关数据, react会转换为真实DOM变化而更新界面
+  2. JSX
+    1). 全称: JavaScript XML
+    2). react定义的一种类似于XML的JS扩展语法: XML+JS
+    3). 作用: 用来创建react虚拟DOM(元素)对象
+      * var ele = <h1>Hello JSX!</h1>;
+      * 注意1: 它不是字符串, 也不是HTML/XML标签
+      * 注意2: 它最终产生的就是一个JS对象
+    4). 标签名任意: HTML标签或其它标签
+    5). 标签属性任意: HTML标签属性或其它
+    6). 基本语法规则
+      * 遇到 <开头的代码, 以标签的语法解析: html同名标签转换为html同名元素, 其它标签需要特别解析
+      * 遇到以 { 开头的代码，以JS的语法解析: 标签中的js代码必须用{}包含
+    7). babel.js的作用
+      * 浏览器的js引擎是不能直接解析JSX语法代码的, 需要babel转译为纯JS的代码才能运行
+      * 只要用了JSX，都要加上type="text/babel", 声明需要babel来处理
+  3. 渲染虚拟DOM(元素)
+    1). 语法: ReactDOM.render(virtualDOM, containerDOM) :
+    2). 作用: 将虚拟DOM元素渲染到真实容器DOM中显示
+    3). 参数说明
+      * 参数一: 纯js或jsx创建的虚拟dom对象
+      * 参数二: 用来包含虚拟DOM元素的真实dom元素对象(一般是一个div)
+  4. 创建虚拟DOM的2种方式:
+    1). 纯JS(一般不用):
+      React.createElement('h1', {id:'myTitle'}, title)
+    2). JSX:
+      <h1 id='myTitle'>{title}</h1>
+      * 注意:
+      * 标签必须有结束
+      * 标签的class属性必须改为className属性
+      * 标签的style属性值必须为: {{color:'red', width:12}}
+
+##四.组件
+  1. 自定义组件(Component) :
+    1). 定义组件
+      //方式1: 工厂(无状态)函数(最简洁, 推荐使用)
+      function MyComponent1() {
+        return <h1>自定义组件标题11111</h1>
+      }
+      //方式2: ES6类语法(复杂组件, 推荐使用)
+      	* 首先会new这个MyComponent2类生成实例，然后由实例去调用render方法，最后在return中拿到虚拟DOM对象
+      class MyComponent2 extends React.Component {
+        render () {
+          return <h1>自定义组件标题33333</h1>
+        }
+      }
+      //方式3: ES5老语法(不推荐使用了)
+      var MyComponent3 = React.createClass({
+        render () {
+          return <h1>自定义组件标题22222</h1>
+        }
+      })
+    2). 渲染组件标签
+      ReactDOM.render(<MyComponent/>, document.getElementById('example'));	
+  2. 注意:
+    1). 返回的组件类必须首字母大写
+    2). 虚拟DOM元素必须只有一个根元素
+    3). 虚拟DOM元素必须有结束标签
+  3. ReactDOM.render()渲染组件标签的基本流程
+    1). React内部会创建组件实例对象
+    2). 得到包含的虚拟DOM并解析为真实DOM
+    3). 插入到指定的页面元素内部
+
+##五.三大属性
+  1. props属性
+    1). 每个组件对象都会有props(properties的简写)属性
+    2). 组件标签的所有属性都保存在props中
+    3). 内部读取某个属性值: this.props.propertyName
+    4). 作用: 通过标签属性从组件外向组件内传递数据(只读)
+    5). 对props中的属性值进行类型限制和必要性限制
+      Person.propTypes = {
+        name: React.PropTypes.string.isRequired,
+        age: React.PropTypes.number.isRequired
+      }
+    6). 扩展属性: 将对象的所有属性通过props传递
+      <Person name = {person.name}/>
+    7). 默认属性值
+      Person.defaultProps = {
+        name: 'Mary'
+      };
+    8). 组件类的构造函数
+      constructor (props) {
+        super(props);
+        console.log(props); // 查看所有属性
+      }

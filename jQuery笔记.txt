@@ -203,7 +203,20 @@
 			* mouseenter/mouseleave   mouseover/mouseout    移入/移除，区别在于后者在移入子元素时也会触发 
 			* hover()使用的就是mouseenter()和mouseleave()
 			* focus/blur: focus事件会在元素获得焦点的时候触发/blur事件会在元素失去焦点的时候触发
-		* on('eventName', function(){})
+		* on('eventName',[,selector] function(){}) 
+			* 可以用于事件委托，当第2个参数[,selector]可以加入子元素选择器进行赛选绑定事件委托元素。
+		* off(events,[selector],[fn])
+			* 移除用目标元素on绑定的事件处理程序
+		* bind(type,fn) 
+			* 为每个匹配元素的特定事件绑定事件处理函数，可同时绑定多个事件，一般都是绑定自定义事件
+		* one(type,fn) 
+			* 为每一个匹配元素的特定事件（像click）绑定一个一次性的事件处理函数。
+		* trigger()
+			* 触发有bind定义的事件(通常是自定义事件) 触发条件基本都是页面加载的时候触发
+		* unbind() 
+			* bind的反向操作，删除匹配元素所绑定的bind事件。
+
+
 	- 解绑事件
 		* off('eventName')
 	- 事件坐标

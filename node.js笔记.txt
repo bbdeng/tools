@@ -10,7 +10,7 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		dir 列出当前目录下的所有文件
 		cd 目录名 进入到指定的目录
 		md 目录名 创建一个文件夹
-		rd 目录名 删除一个文件夹
+	  	rd 目录名 删除一个文件夹
 		node 文件名 可以执行js文件	
 
 	- 目录
@@ -2003,8 +2003,24 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			npm install -g yo
 			* 安装生成器
 			npm install -g generator-gulp-webapp
-			* 生成项目
+			* 生成项目 
 			yo gulp-webapp 
+		
+		12)在gulp中使用Webpack
+		* 在gulpfile.js文件中创建任务
+		var webpack = require('webpack');
+		var webpackConfig = require ('./webpack.config.js') //引入webpack的配置文件
+		//创建任务
+		gulp.task ('webpack',function(callback){
+			var myConfig = Object.create(webpackConfig);
+			webpack(myConfig,function(err,stats){
+				callback();
+			})
+		})
+		//在创建一个任务监视文件变化，如果文件变化了自动执行打包操作
+		gulp.task('default',function(){
+			gulp.watch('./**',['webpack'])  //   ./**监视哪些文件变化
+		})
 	
 	4.Webpack
 		* 安装
@@ -2020,6 +2036,7 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		* 使用
 		编译entry.js 并打包到bundle.js
 		webpack ./entry.js bundle.js  将文件./entry.js打包成bundle.js
+		
 		- 加载css文件
 		* 安装loader:
 		npm install css-loader style-loader
@@ -2037,28 +2054,80 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		var webpack = require('webpack')
 		module.exports = {
 			entry:"./entry.js",  //指定打包的入口文件
+			//多入口写法
+			entry:{
+				bundle1:'./entry1.js',
+				bundle2:'./entry2.js'
+			}, 
+
 			output:{ //配置打包结果
 				path:__dirname,  //定义了输出的文件夹
 				filename:"bundle.js"  //定义了打包结果文件
+				filename:"[NAME].js"  //多入口写法的出口文件名字NAME是个变量，就是bundle1和bundle2
 			}
 			module:{ //定义模块的记载逻辑
 				loaders:[  //定义了一系列的加载器
 					{test:/\.css$/,loader:"style!css"} //当需要加载的文件匹配`test`的正则时，就会调用后面的`loader`对文件进行处理
-					
+					{test:/\.(png|jgp)$/,loader:'url?limit=4000'} //加载图片
+					{test:/\.js?$/,loader:'babel-loader',exclude:/node_modules/,query:{compact:false,presets:['es2015']}}	//ES6转ES5
+
 				]
 				
 			},
 			plugins:[ //这里放入插件
-				new webpack.BannerPlugin("珠峰培训") //该方法只是演示一下插件如何使用，这个方法的作用是在配置后的文件头部输入一行信息。webpack是核心模块需要引入
-			]
+				new webpack.BannerPlugin("珠峰培训"), //该方法只是演示一下插件如何使用，这个方法的作用是在配置后的文件头部输入一行信息。webpack是核心模块需要引入
+				new webpack.optimize.CommonsChunkPlugin('common.js') // 提取公共文件进行打包
+			],
+			resolve:{ //别名
+				jquery:"/lib/javascript/jquery.js"  
+			}
 		};
 
 		有了这个文件 直接执行webpack就行了
 
-		
+		- 加载图片
+		* url-loader会将样式中引用到的图片转为模块来处理
+		* 安装
+		npm install url-loader
+			* limit的参数意思是图片大小小于这个限制的时候，会自动启动base64编码图片。
+		* 使用见上面例子
 
+
+		- 别名(用处一般吧)
+		* 别名的作用是把用户的一个请求重定向到另一个路径，可以减少一直写复杂的重复路径
+		使用
+		* 在配置文件webpack.config.js中一项字段
+		* 然后在入口文件中require的时候，路径写别名就行
+		* 代码演示见上面例子
+
+		- 暴露打包中的jquery
+		* 如果想在前台使用打包的jquery需要把jquery暴露出来
+		* 安装
+		npm install expose-loader --save-dev
+		* 把$作为别名为jquery的变量暴露到全局上下文中
+		* 在入口文件中这样引入
+		require('expose?$!./jquery.js')  $表示用$来接收jquery
 		
-			 
+		- 使用es6
+		* 安装
+		npm install babel-core --save-dev
+		npm install babel-loader --save-dev
+		npm install babel-preset-es2015
+		* 在webpack.config.js中添加配置项。
+		* 代码演示看上面例子
+		{test:/\.js?$/,loader:'babel-loader',exclude:/node_modules/,query:{compact:false,presets:['es2015']}}
+			* test:/\.js?$/ 哪些文件需要打包
+			* loader:'babel-loader' 用什么插件进行打包解析
+			* exclude:/node_modules/ 忽略node_modules
+			* query：对象参数
+		
+		- 打包成多个资源文件
+		* entry属性可以是一个对象，而对象名也就是key会作为下面output的filename属性的[name]
+		* 公共模块 
+		* 我们利用插件就可以智能提取公共部分，以提供我们浏览器的缓存复用
+		* plugins:[ new webpack.optimize.CommonsChunkPlugin('common.js')]
+		* 我们需要手动在html上去加载common.js,并且是必须要最先加载
+		* 代码演示上面例子
 
 
 			

@@ -2766,5 +2766,15 @@ JS是一门轻量级的脚本“编程语言”(HTML+CSS不属于编程语言，属于标记语言)
 		* babel -s 生成sourcemap  babel -s -w mobile.js -o mobile.build.js
 		* babel -d 指定要编译的目录 babel -d es5/ es6/ 
 
+三十七、 JS模块化
+	 - Browserify模块化使用教程(运行在浏览器)
+	 * 下载browserify
+	 	* 全局: npm install browserify -g
+		* 局部: npm install browserify --save-dev
+	 打包处理js:
+	 	* browserify js/src/app.js -o js/dist/bundle.js  //-o 就是outout输出的意思
+	
+
+	
 
 
