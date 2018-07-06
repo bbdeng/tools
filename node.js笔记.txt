@@ -1,4 +1,11 @@
 https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
+安装环境的命令
+安装工具node-gyp  npm install -g node-gyp
+npm install --global windows-build-tools
+npm install --global --production windows-build-tools
+npm config set python python2.7
+npm config set msvs_version 2015 --global
+
 1.命令行窗口(小黑屏)、CMD窗口、终端、shell
 	- 开始菜单 --> 运行 --> CMD --> 回车
 	- 常用的指令：
@@ -12,6 +19,8 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 		md 目录名 创建一个文件夹
 	  	rd 目录名 删除一个文件夹
 		node 文件名 可以执行js文件	
+		flushall 清除radis 缓存
+		keys * 查看radis缓存
 
 	- 目录
 		. 表示当前目录
@@ -189,6 +198,7 @@ https://blog.csdn.net/jiangxinyu50/article/details/79104016 破解webstorm
 			- node -v 查看node版本
 			- nvm ls 查看装的node版本
 			- nvm use 版本号  切换到当前版本
+			
 7.文件系统（File System）
 	- Buffer（缓冲区）
 		- Buffer和数组的结构的非常类似，Buffer是用来存储二进制数据的

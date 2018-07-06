@@ -144,3 +144,74 @@
 html ,body {
 	-webkit-user-select:none;
 }
+44.a标签
+<a href="#" target="_blank">跳转</a>
+href = "javascript:;" 把a标签默认链接跳转的行为给静止掉
+target = "_self"  在当前窗口打开链接地址
+target = "_blank"  在新窗口打开连接地址
+
+			HTML+CSS第2轮学习
+一、head头部里面的内容
+  - meta标签
+  1.移动端手机页面开发必须加的代码
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  webstorm快捷键 meta:vp  tab
+  2.编码
+  <meta charset="utf-8" />
+  3.关键字
+  <meta name="keywords" content="关键字" />
+  4.描述
+  <meta name="description" content="描述内容" />
+  - link标签
+  5.logo小图标
+  <link rel="shortcut icon" href="favicon.ico" />
+  6.CSS样式
+  <link rel="stylesheet" href="">
+  7.标题
+  <title>标题</title>
+  8.script标签
+  9.style标签
+二、标签梳理，不熟悉的
+1.<audio>
+  * <audio> 标签定义声音，比如音乐或其他音频流。
+  * autoplay	autoplay	如果出现该属性，则音频在就绪后马上播放。
+  * controls	controls	如果出现该属性，则向用户显示控件，比如播放按钮。
+  * loop	loop	如果出现该属性，则每当音频结束时重新开始播放。
+  * muted	muted	规定视频输出应该被静音。
+  * preload	preload	如果出现该属性，则音频在页面加载时进行加载，并预备播放。如果使用 "autoplay"，则忽略该属性。
+  * src	url	要播放的音频的 URL。
+2.<caption>Monthly savings</caption>
+  * caption 元素定义表格标题。
+  * caption 标签必须紧随 table 标签之后。您只能对每个表格定义一个标题。通常这个标题会被居中于表格之上。
+3.<dl></dl> <dt></dt> <dd></dd>
+  * 定义列表
+  * <dl> 标签定义了定义列表（definition list）
+  * <dt> 标签定义了定义列表中的项目（即术语部分）。
+  * <dd> 在定义列表中定义条目的定义部分。
+4.<datalist id="cars"></datalist>
+  * <datalist> 标签定义选项列表。
+5.<em>定义强调文本</em>
+6.<embed src="helloworld.swf" />
+  * <embed> 标签定义嵌入的内容，比如插件。
+7.<footer></footer>
+  * <footer> 标签定义文档或节的页脚。
+  * 页脚通常包含文档的作者、版权信息、使用条款链接、联系信息等等。
+  * 您可以在一个文档中使用多个 <footer> 元素。
+8. <figure>
+     <figcaption>黄浦江上的的卢浦大桥</figcaption>
+     <img src="shanghai_lupu_bridge.jpg" width="350" height="234" />
+   </figure>
+  * <figure> 标签规定独立的流内容（图像、图表、照片、代码等等）。
+  * <figcaption> 标签定义 figure 元素的标题（caption）。
+9. <p>Do not forget to buy <mark>milk</mark> today.</p>
+  * <mark> 标签定义带有记号的文本。请在需要突出显示文本时使用 <m> 标签。
+10. <map name="planetmap" id="planetmap">
+      <area shape="circle" coords="180,139,14" href ="venus.html" alt="Venus" />
+      <area shape="circle" coords="129,161,10" href ="mercur.html" alt="Mercury" />
+      <area shape="rect" coords="0,0,110,260" href ="sun.html" alt="Sun" />
+    </map>
+  * 定义一个客户端图像映射。图像映射（image-map）指带有可点击区域的一幅图像。
+11.<meter value="3" min="0" max="10">十分之三</meter>
+   <meter value="0.6">60%</meter> 
+   * <meter> 标签定义已知范围或分数值内的标量测量。也被称为 gauge（尺度）。
+
