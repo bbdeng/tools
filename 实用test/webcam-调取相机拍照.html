@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<video autoplay width="640" height="480"></video>
+<div id="webcamcontrols">
+  <button class="recordbutton" onclick="startRecording();">RECORD</button>
+</div>
+
+<div>
+  <button id='picture'>PICTURE</button>
+</div>
+<canvas id="canvas" width="640" height="480"></canvas>
+<div id="result"></div>
+
+<script language="javascript" type="text/javascript">
+  function onVideoFail(e) {
+    console.log('webcam fail!', e);
+  }
+  function hasGetUserMedia() {
+    // Note: Opera is unprefixed.
+    return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia || navigator.msGetUserMedia);
+  }
+  if (hasGetUserMedia()) {
+    // Good to go!
+  } else {
+    alert('getUserMedia() is not supported in your browser');
+  }
+
+
+  window.URL = window.URL || window.webkitURL;
+  navigator.getUserMedia = navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
+
+  var video = document.querySelector('video');
+  var streamRecorder;
+  var webcamstream;
+
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia({audio: true, video: true}, function (stream) {
+      video.src = window.URL.createObjectURL(stream);
+      webcamstream = stream;
+      // video.play();
+      //  streamrecorder = webcamstream.record();
+    }, onVideoFail);
+  } else {
+    alert('failed');
+  }
+  //    将拍好的照片显示在画布上
+  var canvas = document.getElementById("canvas")
+  var context = canvas.getContext("2d");
+  var result = document.getElementById("result");
+  document.getElementById("picture").addEventListener("click", function () {
+      context.drawImage(video, 0, 0, 640, 480);
+      var imgSrc = canvas.toDataURL();  //获取图片的DataURL
+      var newImg = new Image();
+      newImg.src = imgSrc;  //将图片路径赋值给src
+      result.innerHTML = '';
+      result.appendChild(newImg);
+  });
+
+  function startRecording() {
+    streamRecorder = webcamstream.record();
+    setTimeout(stopRecording, 10000);
+  }
+  function stopRecording() {
+    streamRecorder.getRecordedData(postVideoToServer);
+  }
+  function postVideoToServer(videoblob) {
+
+    var data = {};
+    data.video = videoblob;
+    data.metadata = 'test metadata';
+    data.action = "upload_video";
+    jQuery.post("http://www.kongraju.in/uploadvideo.php", data, onUploadSuccess);
+  }
+  function onUploadSuccess() {
+    alert('video uploaded');
+  }
+
+</script>
+
+
+</body>
+</html>

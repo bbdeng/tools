@@ -218,20 +218,309 @@
   let p = new Point();
   console.log(p);    // 未传入值属性值默认为 12 12 
 
+8.Promise对象
+  1)理解:
+    * Promise对象: 代表了未来某个将要发生的事件(通常是一个异步操作)
+    * 有了promise对象, 可以将异步操作以同步的流程表达出来, 避免了层层嵌套的回调函数(俗称'回调地狱')
+    * ES6的Promise是一个构造函数, 用来生成promise实例
+  2)使用promise基本步骤(2步):
+     * 创建promise对象
+      let promise = new Promise((resolve, reject) => {
+        //初始化promise状态为 pending
+        //执行异步操作
+        if(异步操作成功) {
+          resolve(value);//修改promise的状态为fullfilled
+        } else {
+          reject(errMsg);//修改promise的状态为rejected
+        }
+      })
+    * 调用promise的then()
+      promise.then(function{
+        result => console.log(result),
+        errorMsg => alert(errorMsg)
+      })
+  3)promise对象的3个状态
+    * pending: 初始化状态
+    * fullfilled: 成功状态
+    * rejected: 失败状态
+9. Symbol
+  前言：ES5中对象的属性名都是字符串，容易造成重名，污染环境
+  概念：ES6中的添加了一种原始数据类型symbol(已有的原始数据类型：String, Number, boolean, null, undefined, 对象)
+  特点：
+    1、Symbol属性对应的值是唯一的，解决命名冲突问题
+    2、Symbol值不能与其他数据进行计算，包括同字符串拼串
+    3、for in, for of遍历时不会遍历symbol属性。
+  使用：
+    1、调用Symbol函数得到symbol值
+      let symbol = Symbol();
+      let obj = {};
+      obj[symbol] = 'hello';
+    2、传参标识
+      let symbol = Symbol('one');
+      let symbol2 = Symbol('two');
+      console.log(symbol);// Symbol('one')
+      console.log(symbol2);// Symbol('two')
+    3、内置Symbol值
+      * 除了定义自己使用的Symbol值以外，ES6还提供了11个内置的Symbol值，指向语言内部使用的方法。
+     - Symbol.iterator
+      * 对象的Symbol.iterator属性，指向该对象的默认遍历器方法(后边讲)
 
+10.iterator遍历器
+  1)概念：
+    * iterator是一种接口机制，为各种不同的数据结构提供统一的访问机制
+  2)作用：
+    * 为各种数据结构，提供一个统一的、简便的访问接口；
+    * 使得数据结构的成员能够按某种次序排列
+    * ES6创造了一种新的遍历命令for...of循环，Iterator接口主要供for...of消费。
+  3)工作原理：
+    * 创建一个指针对象，指向数据结构的起始位置。
+    * 第一次调用next方法，指针自动指向数据结构的第一个成员
+    * 接下来不断调用next方法，指针会一直往后移动，直到指向最后一个成员
+    * 每调用next方法返回的是一个包含value和done的对象，{value: 当前成员的值,done: 布尔值}
+      * value表示当前成员的值，done对应的布尔值表示当前的数据的结构是否遍历结束。
+      * 当遍历结束的时候返回的value值是undefined，done值为true
+  代码例子(模拟ES6写的，ES6已经写好了)
+        自定义iterator生成指针对象
+        function mockIterator(arr) {
+          let nextIndex = 0;
+          return {
+            next: function () {
+              return nextIndex<arr.length?{value: arr[nextIndex++], done: false}:{value: undefined, done: true}
+            }
+          }
+        }
+	let arr = [1,2,3,4,5];
+        let iteratorObj = mockIterator(arr);
+        console.log(iteratorObj.next());
+        console.log(iteratorObj.next());
+        console.log(iteratorObj.next());
+	
+  4)原生具备iterator接口的数据(可用for of遍历)
+    * Array String arguments  set容器  map容器  
+    let arr3 = [1, 2, 'kobe', true];
+        for(let i of arr3){
+          console.log(i);
+        }
+11.Generator函数
+  1)概念：
+    * ES6提供的解决异步编程的方案之一
+    * Generator函数是一个状态机，内部封装了不同状态的数据，
+    * 用来生成遍历器对象
+    * 可暂停函数(惰性求值), yield可暂停，next方法可启动。每次返回的是yield后的表达式结果
+  2)特点：
+    * function 与函数名之间有一个星号
+    * 内部用yield表达式来定义不同的状态
+    例如：
+        function* generatorExample(){
+          let result = yield 'hello';  // 状态值为hello
+          yield 'generator'; // 状态值为generator
+        }
+    * generator函数返回的是指针对象(接11章节里iterator)，而不会执行函数内部逻辑
+    * 调用next方法函数内部逻辑开始执行，遇到yield表达式停止，返回{value: yield后的表达式结果/undefined, done: false/true}
+    * 再次调用next方法会从上一次停止时的yield处开始，直到最后
+    * yield语句返回结果通常为undefined， 当调用next方法时传参内容会作为启动时yield语句的返回值。
+    
+    例子
+     // 小试牛刀
+    function* generatorTest() {
+      console.log('函数开始执行');
+      yield 'hello';
+      console.log('函数暂停后再次启动');
+      yield 'generator';
+    }
+    // 生成遍历器对象
+    let Gt = generatorTest();
+    // 执行函数，遇到yield后即暂停
+    console.log(Gt); // 遍历器对象
+    let result = Gt.next(); // 函数执行,遇到yield暂停
+    console.log(result); // {value: "hello", done: false}
+    result = Gt.next(); // 函数再次启动
+    console.log(result); // {value: 'generator', done: false}
+    result = Gt.next();
+    console.log(result); // {value: undefined, done: true}表示函数内部状态已经遍历完毕
+    
 
+    // 案例练习
+    /*
+    * 需求：
+    * 1、发送ajax请求获取新闻内容
+    * 2、新闻内容获取成功后再次发送请求，获取对应的新闻评论内容
+    * 3、新闻内容获取失败则不需要再次发送请求。
+    * 
+    * */ 
+    function* sendXml() {
+      // url为next传参进来的数据
+     let url = yield getNews('http://localhost:3000/news?newsId=2');
+      yield getNews(url);
+    }
+    function getNews(url) {
+      $.get(url, function (data) {
+        console.log(data);
+        let commentsUrl = data.commentsUrl;
+        let url = 'http://localhost:3000' + commentsUrl;
+        // 当获取新闻内容成功，发送请求获取对应的评论内容
+        // 调用next传参会作为上次暂停是yield的返回值
+        sx.next(url);
+      })
+    }
+    let sx = sendXml();
+    // 发送请求获取新闻内容
+    sx.next();
+12.async函数(源自ES2017)
+  1）概念： 
+    * 真正意义上去解决异步回调的问题，同步流程表达异步操作
+  2）本质： Generator的语法糖
+  3）语法：
+      async function foo(){
+        await 异步操作;
+        await 异步操作；
+      }
+  4）特点：
+    * 不需要像Generator去调用next方法，遇到await等待，当前的异步操作完成就往下执行
+    * 返回的总是Promise对象，可以用then方法进行下一步操作
+    * async取代Generator函数的星号*，await取代Generator的yield
+    * 语意上更为明确，使用简单，经临床验证，暂时没有任何副作用
+  
+  // 案例演示
+    async function sendXml(url) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url,
+          type: 'GET',
+          success: data =>  resolve(data),
+          error: error => reject(error)
+        })
+      })
+    }
 
+    async function getNews(url) {
+      let result = await sendXml(url);
+      let result2 = await sendXml(url);
+      console.log(result, result2);
+    }
+    getNews('http://localhost:3000/news?id=2')
 
+13.class
+  * 通过class定义类/实现类的继承
+  * 在类中通过constructor定义构造方法
+  * 通过new来创建类的实例
+  * 通过extends来实现类的继承
+  * 通过super调用父类的构造方法
+  * 重写从父类中继承的一般方法
+  
+    class Person {
+        //调用类的构造方法
+        constructor(name, age){
+            this.name = name;
+            this.age = age;
 
+        }
+        //定义一般的方法
+        showName(){
+            console.log(this.name, this.age);
+        }
+    }
+    let person = new Person('kobe', 39);
+    console.log(person, person.showName());
 
+    //定义一个子类
+    class StrPerson extends Person{
+        constructor(name, age, salary){
+            super(name, age);//调用父类的构造方法
+            this.salary = salary;
+        }
+        showName(){//在子类自身定义方法
+            console.log(this.name, this.age, this.salary);
+        }
+    }
+    let str = new StrPerson('weide', 38, 1000000000);
+    console.log(str);
+    str.showName();
 
+14.ES6新增方法
+  - 新增字符串方法
+    * includes(str) : 判断是否包含指定的字符串
+    * startsWith(str) : 判断是否以指定字符串开头
+    * endsWith(str) : 判断是否以指定字符串结尾
+    * repeat(count) : 重复指定次数
 
+  - 新增Number方法
+    * 二进制与八进制数值表示法: 二进制用0b, 八进制用0o
+    * Number.isFinite(i) : 判断是否是有限大的数
+    * Number.isNaN(i) : 判断是否是NaN
+    * Number.isInteger(i) : 判断是否是整数
+    * Number.parseInt(str) : 将字符串转换为对应的数值
+    * Math.trunc(i) : 直接去除小数部分
+  -ES6新增的Number的方法
+    * 二进制与八进制数值表示法: 二进制用0b, 八进制用0o
+    * Number.isFinite(i) : 判断是否是有限大的数
+    * Number.isNaN(i) : 判断是否是NaN
+    * Number.isInteger(i) : 判断是否是整数
+    * Number.parseInt(str) : 将字符串转换为对应的数值
 
+  - 新增数组方法
+    * Array.from(v) : 将伪数组对象或可遍历对象转换为真数组
+    * Array.of(v1, v2, v3) : 将一系列值转换成数组
+    * Array.find(function(value, index, arr){return true}) : 找出第一个满足条件返回true的元素
+    * Array.findIndex(function(value, index, arr){return true}) : 找出第一个满足条件返回true的元素下标
+  - 新增对象方法
+    * Object.is(v1, v2)  判断2个数据是否完全相等
+    * Object.assign(target, source1, source2..)   将源对象的属性复制到目标对象上
+    * 直接操作 __proto__ 属性 let obj2 = {}; obj2.__proto__ = obj1;
 
+15.深度克隆
+  1)数据类型：
+    * 数据分为基本的数据类型(String, Number, boolean, Null, Undefined)和对象数据类型
+    - 基本数据类型：
+      * 特点： 存储的是该对象的实际数据
+    - 对象数据类型：
+      * 特点： 存储的是该对象在栈中引用，真实的数据存放在堆内存里
+  2)复制数据
+    - 基本数据类型存放的就是实际的数据，可直接复制，修改复制后的值不会对原数据造成影响
+      let number2 = 2;
+      let number1 = number2;
+    - 克隆数据：对象/数组
+      * 区别： 浅拷贝/深度拷贝
+      * 判断： 拷贝是否产生了新的数据还是拷贝的是数据的引用
+      * 知识点：对象数据存放的是对象在栈内存的引用，直接复制的是对象的引用
+      let obj = {username: 'kobe'}
+      let obj1 = obj; // obj1 复制了obj在栈内存的引用
 
+    - 常用的拷贝技术
+      * arr.concat(): 数组浅拷贝
+      * arr.slice(): 数组浅拷贝
+      * JSON.parse(JSON.stringify(arr/obj)): 数组或对象深拷贝, 但不能处理函数数据
+    
+     
+    深度克隆函数
+    //定义检测数据类型的功能函数
+    function checkedType(target){
+      return Object.prototype.toString.call(target).slice(8,-1)
+    }
 
+    //实现深度克隆--->对象/数组
+    function clone(target){
+      //判断拷贝的数据类型
+      //初始化变量result,成为最终克隆的数据
+      let result,targetType = checkedType(target);
+      if(targetType === 'Object'){
+        result = {};
+      }else if(targetType === 'Array'){
+	result = [];
+      } else {
+	retuen target;
+      }
 
-
-
+      //遍历目标数据
+      for (let i in target){
+        let value = target[i];
+	if(checkedType(value)==='Object'||checkedType(value)==='Array'){//对象或者数组里嵌套了对象或者数组
+	  result[i] = clone(value)
+	}else{//获取到的value值是基本的数据类型或者是函数。
+	  result[i] = value;
+	}
+      }
+      retuen result;
+    }
 
 
